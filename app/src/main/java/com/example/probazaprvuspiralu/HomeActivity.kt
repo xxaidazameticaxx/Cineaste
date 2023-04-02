@@ -10,9 +10,10 @@ import com.example.probazaprvuspiralu.GameData.Companion.getAll
 
 
 class HomeActivity : AppCompatActivity() {
-    private lateinit var gameViewer:RecyclerView
     private lateinit var homeButton : ImageButton
     private lateinit var backButton:ImageButton
+
+    private lateinit var gameViewer:RecyclerView
     private lateinit var gameViewerAdapter:GameListAdapter
     private var gameList = getAll()
     /*companion object{
@@ -22,11 +23,13 @@ class HomeActivity : AppCompatActivity() {
     */
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
         homeButton = findViewById(R.id.home_button)
         backButton=findViewById(R.id.details_button)
+
         gameViewer = findViewById(R.id.game_list)
         gameViewer.layoutManager=LinearLayoutManager(
             this,

@@ -27,6 +27,10 @@ class GameDetailsActivity : AppCompatActivity() {
     private lateinit var homeButton : ImageButton
     private lateinit var backButton:ImageButton
 
+    private lateinit var impressionViewer:RecyclerView
+    private lateinit var impressionViewerAdapter:UserImpressionAdapter
+    private var impressionList =listOf<UserImpression>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +46,17 @@ class GameDetailsActivity : AppCompatActivity() {
         description = findViewById(R.id.description_textview)
         homeButton=findViewById(R.id.home_button)
         backButton=findViewById(R.id.details_button)
+
+
+        impressionViewer = findViewById(R.id.review_list)
+        impressionViewer.layoutManager=LinearLayoutManager(
+            this,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+
+        impressionViewerAdapter=UserImpressionAdapter(impressionList)
+        impressionViewer.adapter=impressionViewerAdapter
 
         val extras = intent.extras
         if (extras != null) {
@@ -67,6 +82,9 @@ class GameDetailsActivity : AppCompatActivity() {
         publisher.text=game.publisher
         genre.text=game.genre
         description.text=game.description
+        impressionList=game.userImpressions
+        impressionViewerAdapter.updateImpressions(impressionList) //ovo cudo!!
+
 
         val context: Context = cover.context
         var id: Int = context.resources
