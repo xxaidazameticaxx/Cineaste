@@ -111,16 +111,5 @@ class GameDetailsActivity : AppCompatActivity() {
 
     }
 
-    /*fun showLastGameDetails() {
-
-        finish()
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startActivity(intent)
-
-    }
-
-     */
-
-
 
 }
