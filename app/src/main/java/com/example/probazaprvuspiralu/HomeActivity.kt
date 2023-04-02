@@ -16,12 +16,10 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var gameViewer:RecyclerView
     private lateinit var gameViewerAdapter:GameListAdapter
     private var gameList = getAll()
-    /*companion object{
+    companion object{
         var lastGameClicked: Game? = null
-        var lastActivity: String? = null
+        var works=false;
     }
-    */
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,51 +37,41 @@ class HomeActivity : AppCompatActivity() {
         gameViewerAdapter= GameListAdapter(arrayListOf()){ game -> showGameDetails(game) }
         gameViewer.adapter=gameViewerAdapter
         gameViewerAdapter.updateGames(gameList)
-        homeButton.setOnClickListener{
-            showHomepage()
-        }
-       /* backButton.setOnClickListener{
+
+        homeButton.isEnabled=false;
+        backButton.isEnabled=works;
+
+
+        backButton.setOnClickListener{
             showLastGameDetails()
         }
-        */
 
     }
 
     private fun showGameDetails(game: Game) {
-
-        /*lastActivity = "GameDetailsActivity"
-
-        // Set last game clicked to the game that was clicked
-        lastGameClicked = game
-         */
 
         val intent = Intent(this, GameDetailsActivity::class.java).apply {
             putExtra("game_title", game.title)
 
         }
         startActivity(intent)
+
+        lastGameClicked = game
+        works = true;
     }
 
-    private fun showHomepage(){
-        if(!isTaskRoot) {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-        }
-    }
 
-   /* private fun showLastGameDetails() {
-        // Check if last activity is game detail activity
-        if (lastActivity == "GameDetailsActivity") {
-            // Start game detail activity with the last game clicked
+    fun showLastGameDetails() {
+
             lastGameClicked?.let { game ->
                 val intent = Intent(this, GameDetailsActivity::class.java).apply {
                     putExtra("game_title", game.title)
                 }
                 startActivity(intent)
             }
-        }
+
     }
-    */
+
 
 
 }

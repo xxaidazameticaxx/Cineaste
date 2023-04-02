@@ -2,16 +2,16 @@ package com.example.probazaprvuspiralu
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.probazaprvuspiralu.GameData.Companion.getAll
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class GameDetailsActivity : AppCompatActivity() {
     private lateinit var game: Game
@@ -26,15 +26,14 @@ class GameDetailsActivity : AppCompatActivity() {
     private lateinit var genre:TextView
     private lateinit var homeButton : ImageButton
     private lateinit var backButton:ImageButton
-
     private lateinit var impressionViewer:RecyclerView
     private lateinit var impressionViewerAdapter:UserImpressionAdapter
     private var impressionList =listOf<UserImpression>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_details)
+
         title = findViewById(R.id.game_title_textview)
         cover = findViewById(R.id.cover_imageview)
         platform = findViewById(R.id.platform_textview)
@@ -67,11 +66,14 @@ class GameDetailsActivity : AppCompatActivity() {
         }
 
         homeButton.setOnClickListener{
-            showHomepage()
+            showHomePage()
         }
+
+        backButton.isEnabled=false;
 
 
     }
+
 
     private fun populateDetails() {
         title.text=game.title
@@ -82,7 +84,7 @@ class GameDetailsActivity : AppCompatActivity() {
         publisher.text=game.publisher
         genre.text=game.genre
         description.text=game.description
-        impressionList=game.userImpressions
+        impressionList=game.userImpressions.sortedByDescending { it.timestamp }
         impressionViewerAdapter.updateImpressions(impressionList) //ovo cudo!!
 
 
@@ -103,12 +105,22 @@ class GameDetailsActivity : AppCompatActivity() {
         return game?:Game("Test","Test","Test",0.0,"Test","Test","","","","", emptyList())
     }
 
-    private fun showHomepage(){
-        if(!isTaskRoot) {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-        }
+    private fun showHomePage(){
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+
     }
+
+    /*fun showLastGameDetails() {
+
+        finish()
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(intent)
+
+    }
+
+     */
+
 
 
 }
