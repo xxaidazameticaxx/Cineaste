@@ -83,7 +83,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/game_poster_card"
-                android:layout_width="200dp"
+                android:layout_width="280dp"
                 android:layout_height="120dp"
                 app:cardElevation="0dp"
                 app:cardUseCompatPadding="false"
