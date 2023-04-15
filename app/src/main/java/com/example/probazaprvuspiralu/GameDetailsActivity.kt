@@ -34,7 +34,7 @@ class GameDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_details)
 
-        title = findViewById(R.id.game_title_textview)
+        title = findViewById(R.id.item_title_textview)
         cover = findViewById(R.id.cover_imageview)
         platform = findViewById(R.id.platform_textview)
         releaseDate = findViewById(R.id.release_date_textview)
