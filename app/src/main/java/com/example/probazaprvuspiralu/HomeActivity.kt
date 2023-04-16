@@ -20,11 +20,9 @@ class HomeActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         val navView: BottomNavigationView = findViewById(R.id.bottom_nav)
         navView.setupWithNavController(navController)
-        navController.addOnDestinationChangedListener(naview)
+
     }
 
-    override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
-        // Handle navigation destination changes here
-    }
+
 
 }

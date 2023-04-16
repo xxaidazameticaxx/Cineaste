@@ -5,18 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.ArrayList
 
 class GameDetailsFragment : Fragment() {
 
@@ -36,8 +32,7 @@ class GameDetailsFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        var view = inflater.inflate(R.layout.game_details_fragment, container, false)
-
+        val view = inflater.inflate(R.layout.game_details_fragment, container, false)
 
         title = view.findViewById(R.id.item_title_textview)
         cover = view.findViewById(R.id.cover_imageview)
@@ -69,8 +64,22 @@ class GameDetailsFragment : Fragment() {
             activity?.finish()
         }
 
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav)
 
-        return view;
+        bottomNavigationView.menu.findItem(R.id.gameDetailsItem).isEnabled=false //always disabled from the game details fragment
+        bottomNavigationView.menu.findItem(R.id.homeItem).isEnabled=true //never disabled but needed to specify because of the home fragment
+
+
+        val homeButton = requireActivity().findViewById<BottomNavigationItemView>(R.id.homeItem)
+
+       homeButton.setOnClickListener{
+           val navController = findNavController()
+           val bundle = Bundle()
+           bundle.putString("game_title", game.title)
+           navController.navigate(R.id.action_gameDetailsItem_to_homeItem, bundle) //sends game title as a bundle to the home fragment easier than saving the game
+        }
+
+        return view
     }
 
     private fun populateDetails() {

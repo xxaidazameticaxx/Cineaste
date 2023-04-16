@@ -18,6 +18,9 @@
         android:name="com.example.probazaprvuspiralu.GameDetailsFragment"
         android:label="GameDetailsFragment" >
 
+        <action
+            android:id="@+id/action_gameDetailsItem_to_homeItem"
+            app:destination="@id/homeItem" />
     </fragment>
 
 </navigation>
