@@ -1,77 +1,30 @@
 package com.example.probazaprvuspiralu
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageButton
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.probazaprvuspiralu.GameData.Companion.getAll
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class HomeActivity : AppCompatActivity() {
-    private lateinit var homeButton : ImageButton
-    private lateinit var backButton:ImageButton
-
-    private lateinit var gameViewer:RecyclerView
-    private lateinit var gameViewerAdapter:GameListAdapter
-    private var gameList = getAll()
-    companion object{
-        var lastGameClicked: Game? = null
-        var works=false;
-    }
-
-
+    private lateinit var navController:NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
-        homeButton = findViewById(R.id.home_button)
-        backButton=findViewById(R.id.details_button)
-
-        gameViewer = findViewById(R.id.game_list)
-        gameViewer.layoutManager=LinearLayoutManager(
-            this,
-            LinearLayoutManager.VERTICAL,
-            false
-        )
-        gameViewerAdapter= GameListAdapter(arrayListOf()){ game -> showGameDetails(game) }
-        gameViewer.adapter=gameViewerAdapter
-        gameViewerAdapter.updateGames(gameList)
-
-        homeButton.isEnabled=false;
-        backButton.isEnabled=works;
-
-
-        backButton.setOnClickListener{
-            showLastGameDetails()
-        }
-
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        val navView: BottomNavigationView = findViewById(R.id.bottom_nav)
+        navView.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener(naview)
     }
 
-    private fun showGameDetails(game: Game) {
-
-        val intent = Intent(this, GameDetailsActivity::class.java).apply {
-            putExtra("game_title", game.title)
-
-        }
-        startActivity(intent)
-
-        lastGameClicked = game
-        works = true;
+    override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
+        // Handle navigation destination changes here
     }
-
-
-    fun showLastGameDetails() {
-
-            lastGameClicked?.let { game ->
-                val intent = Intent(this, GameDetailsActivity::class.java).apply {
-                    putExtra("game_title", game.title)
-                }
-                startActivity(intent)
-            }
-
-    }
-
-
 
 }

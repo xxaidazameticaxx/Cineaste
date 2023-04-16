@@ -22,7 +22,7 @@ class GameListAdapter (
         holder.gamePlatform.text = games[position].platform
         holder.gameRating.text = games[position].rating.toString()
         holder.gameReleaseDate.text = games[position].releaseDate
-        holder.itemView.setOnClickListener{ onItemClicked(games[position]) }
+        holder.itemView.setOnClickListener{ onItemClicked(games[position])  }
     }
     fun updateGames(games: List<Game>) {
         this.games = games

@@ -35,7 +35,7 @@
     <LinearLayout
         android:id="@+id/glavni"
         android:layout_width="match_parent"
-        android:layout_height="560dip"
+        android:layout_height="match_parent"
         android:background="#01579B"
         android:orientation="vertical"
         android:textColor="#FFFFFF">
@@ -166,7 +166,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/review_list"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#FFFFFF" />
     </LinearLayout>
