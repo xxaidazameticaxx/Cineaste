@@ -1,6 +1,7 @@
 package com.example.probazaprvuspiralu
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +30,6 @@ class GameDetailsFragment : Fragment() {
     private lateinit var impressionViewer: RecyclerView
     private lateinit var impressionViewerAdapter:UserImpressionAdapter
     private var impressionList =listOf<UserImpression>()
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.game_details_fragment, container, false)
@@ -64,21 +64,30 @@ class GameDetailsFragment : Fragment() {
             activity?.finish()
         }
 
-        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav)
+        //kad smo u portrait ne treba nam nista
+        if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) { //dodano
+            val bottomNavigationView:BottomNavigationView=
+                requireActivity().findViewById(R.id.bottom_nav)
 
-        bottomNavigationView.menu.findItem(R.id.gameDetailsItem).isEnabled=false //always disabled from the game details fragment
-        bottomNavigationView.menu.findItem(R.id.homeItem).isEnabled=true //never disabled but needed to specify because of the home fragment
+            bottomNavigationView.menu.findItem(R.id.gameDetailsItem).isEnabled =
+                false //always disabled from the game details fragment
+            bottomNavigationView.menu.findItem(R.id.homeItem).isEnabled =
+                true //never disabled but needed to specify because of the home fragment
 
 
-        val homeButton = requireActivity().findViewById<BottomNavigationItemView>(R.id.homeItem)
+            val homeButton:BottomNavigationItemView = requireActivity().findViewById(R.id.homeItem)
 
-       homeButton.setOnClickListener{
-           val navController = findNavController()
-           val bundle = Bundle()
-           bundle.putString("game_title", game.title)
-           navController.navigate(R.id.action_gameDetailsItem_to_homeItem, bundle) //sends game title as a bundle to the home fragment easier than saving the game
+            homeButton.setOnClickListener {
+
+                val navController = findNavController() //ovo vljd ostaje isto
+                val bundle = Bundle()
+                bundle.putString("game_title", game.title)
+                navController.navigate(
+                    R.id.action_gameDetailsItem_to_homeItem,
+                    bundle
+                ) //sends game title as a bundle to the home fragment easier than saving the game
+            }
         }
-
         return view
     }
 
@@ -98,7 +107,7 @@ class GameDetailsFragment : Fragment() {
         val context: Context = cover.context
         var id: Int = context.resources
             .getIdentifier(game.coverImage, "drawable", context.packageName)
-        if (id===0) id=context.resources
+        if (id==0) id=context.resources
             .getIdentifier("picture1", "drawable", context.packageName)
         cover.setImageResource(id)
 

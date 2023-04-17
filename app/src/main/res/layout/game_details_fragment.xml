@@ -42,8 +42,9 @@
 
 
         <LinearLayout
+            android:id="@+id/top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dip"
             android:layout_weight="1"
             android:background="#01579B"
             android:orientation="vertical"
@@ -166,7 +167,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/review_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dip"
             android:layout_weight="1"
             android:background="#FFFFFF" />
     </LinearLayout>
