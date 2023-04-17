@@ -169,6 +169,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:paddingStart="10dip"
+                        android:paddingLeft="10dip"
+                        android:paddingTop="10dip"
+                        android:paddingEnd="10dip"
+                        android:paddingRight="10dip"
+                        android:paddingBottom="10dip"
                         android:text="TextView"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF" />
