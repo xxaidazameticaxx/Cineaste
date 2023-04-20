@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="114dp"
         android:layout_gravity="center_horizontal"
+        android:background="#FFFFFF"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -24,7 +25,8 @@
             android:background="@drawable/underline"
             android:ems="10"
             android:hint="@string/search"
-            android:padding="8dp" />
+            android:padding="8dp"
+        />
 
         <ImageButton
             android:id="@+id/search_button"
@@ -34,6 +36,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="#FFFFFF"
         android:id="@+id/game_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
