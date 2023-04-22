@@ -29,7 +29,7 @@ class HomeActivity : AppCompatActivity() {
 
                 val bundle = Bundle()
                 bundle.putString("game_title", gameList[0].title) //to initialize the first state of the details fragment
-                //homeNavController.navigate(R.id.homeItem)
+                homeNavController.navigate(R.id.homeItem)
                 detailsNavController.navigate(R.id.gameDetailsItem, bundle)
 
         } else {
