@@ -1,6 +1,5 @@
 package com.example.probazaprvuspiralu
 
-import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +19,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertTrue
 import org.hamcrest.CoreMatchers.*
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,6 +28,11 @@ import org.hamcrest.CoreMatchers.`is` as Is
 
 @RunWith(AndroidJUnit4::class)
 class OwnEspressoTests {
+
+    @After
+    fun cleanup() {
+        homeRule.scenario.close()
+    }
 
     fun hasItemCount(n: Int) = object : ViewAssertion {
         override fun check(view: View?, noViewFoundException: NoMatchingViewException?) {
@@ -49,26 +54,87 @@ class OwnEspressoTests {
     var homeRule:ActivityScenarioRule<HomeActivity> = ActivityScenarioRule(HomeActivity::class.java)
 
     /*
-    Scenarij 1.
+    Scenarij 1. šta testirate?, zašto? i kako osiguravate da test provjerava navedeno?
+    This scenario covers case:
+     - the app is opened in portrait mode,
+     - device rotates while in home fragment
+     - device rotates once again
+
      */
 
     @Test
     fun scenario1() {
+
+        homeRule.scenario.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+
+        // check if the home fragment is shown and not the details fragment
+        onView(withId(R.id.fragment_details_parent)).check(doesNotExist())
+        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed()))
+
+        // check if bottom navigation exists and is displayed in portrait orientation
+        onView(withId(R.id.bottom_nav)).check(matches(isDisplayed()))
+
+        // check if menu items home and details are disabled when we first open the app
+        onView(withId(R.id.gameDetailsItem)).check(matches(isNotEnabled()))
+        onView(withId(R.id.homeItem)).check(matches(isNotEnabled()))
+
+        // rotate device to landscape
+        homeRule.scenario.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+
+        // check if the details fragment is shown
+        onView(withId(R.id.fragment_details_parent)).check(matches(isDisplayed()))
+        // check if the home fragment is shown and is placed left of the details fragment
+        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(R.id.fragment_details_parent)))
+
+        // check if bottom navigation doesn't exist in landscape orientation
+        onView(withId(R.id.bottom_nav)).check(doesNotExist())
+
+
+       // rotate device to portrait
+       homeRule.scenario.onActivity {
+           it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+       }
+
+
+       // when we go back to portrait mode we should be able to use the app as if we just opened it
+       onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed()))
+       onView(withId(R.id.fragment_details_parent)).check(doesNotExist())
+       onView(withId(R.id.bottom_nav)).check(matches(isDisplayed()))
+       onView(withId(R.id.gameDetailsItem)).check(matches(isNotEnabled()))
+
+       // onView(withId(R.id.homeItem)).check(matches(isNotEnabled()))
+
+    }
+
+    /*
+    Scenarij 2. šta testirate?, zašto? i kako osiguravate da test provjerava navedeno?
+    This scenario covers case:
+     - the app is opened in portrait mode
+     - clickOn is perfomed on recycle view item
+     - clickOn is performed on menu home item
+     - clickOn is performed on menu details item
+     - device rotates while in details fragment
+
+     */
+    @Test
+    fun scenario2() {
         // Set the orientation to portrait
         homeRule.scenario.onActivity {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
+        // check if bottom navigation exists and is displayed in portrait orientation
         onView(withId(R.id.bottom_nav)).check(matches(isDisplayed()))
 
-        //details dugme ne radi iz home fragment
+        // check if menu items home and details are disabled when we first open the app
         onView(withId(R.id.gameDetailsItem)).check(matches(isNotEnabled()))
-
-        //home dugme ne radi iz home fragment
         onView(withId(R.id.homeItem)).check(matches(isNotEnabled()))
 
-        //valjda smo sad u details fragmentu
-
+        // check the children of the recycle view and perform clickOn action on the first game
         val prvaIgra = GameData.getAll()[0]
         onView(withId(R.id.game_list)).perform(RecyclerViewActions.actionOnItem<ViewHolder>(allOf(
             hasDescendant(withText(prvaIgra.title)),
@@ -76,6 +142,7 @@ class OwnEspressoTests {
             hasDescendant(withText(prvaIgra.rating.toString()))
         ),click()))
 
+        // check if the first game data is displayed
         onView(instanceOf(RecyclerView::class.java)).perform(scrollTo()).check(hasItemCount(prvaIgra.userImpressions.size))
         onView(withText(prvaIgra.description)).perform(scrollTo()).check(matches(isCompletelyDisplayed()))
         onView(withText(prvaIgra.releaseDate)).perform(scrollTo()).check(matches(isCompletelyDisplayed()))
@@ -83,63 +150,88 @@ class OwnEspressoTests {
         onView(withText(prvaIgra.esrbRating)).perform(scrollTo()).check(matches(isCompletelyDisplayed()))
         onView(withText(prvaIgra.genre)).perform(scrollTo()).check(matches(isCompletelyDisplayed()))
 
-        //details dugme ne radi iz details fragment
+        // check if menu item details is disabled in details fragment
         onView(withId(R.id.gameDetailsItem)).check(matches(isNotEnabled()))
 
-        //home dugme radi iz details fragment
+        // check if menu item home is enabled in details fragment
         onView(withId(R.id.homeItem)).check(matches(isEnabled()))
 
-        //testiram layout
-        onView(withId(R.id.cover_imageview)).check(isCompletelyAbove(withId(R.id.item_title_textview)))
-        onView(withId(R.id.description_textview)).check(isCompletelyBelow(withId(R.id.item_title_textview)))
-        onView(withId(R.id.description_text)) .check(matches(withText("Description")));
-        onView(withId(R.id.aboutgame_textview)) .check(matches(withText("About game")));
-        onView(withId(R.id.publisher_textview)) .check(isCompletelyLeftOf(withId(R.id.genre_textview)))
-        onView(withId(R.id.esrb_rating_textview)) .check(isCompletelyLeftOf(withId(R.id.developer_textview)))
-        onView(withId(R.id.platform_textview)) .check(isCompletelyLeftOf(withId(R.id.release_date_textview)))
-        onView(withId(R.id.review_list)).check(isCompletelyBelow(withId(R.id.release_date_textview)))
+        // testing the new game_details_fragment
+        onView(withId(R.id.cover_imageview)).perform(scrollTo()).check(isCompletelyAbove(withId(R.id.item_title_textview)))
+        onView(withId(R.id.description_textview)).perform(scrollTo()).check(isCompletelyBelow(withId(R.id.item_title_textview)))
+        onView(withId(R.id.description_text)) .perform(scrollTo()).check(matches(withText("Description")))
+        onView(withId(R.id.aboutgame_textview)) .perform(scrollTo()).check(matches(withText("About game")))
+        onView(withId(R.id.publisher_textview)) .perform(scrollTo()).check(isCompletelyLeftOf(withId(R.id.genre_textview)))
+        onView(withId(R.id.esrb_rating_textview)) .perform(scrollTo()).check(isCompletelyLeftOf(withId(R.id.developer_textview)))
+        onView(withId(R.id.platform_textview)) .perform(scrollTo()).check(isCompletelyLeftOf(withId(R.id.release_date_textview)))
+        onView(withId(R.id.review_list)).perform(scrollTo()).check(isCompletelyBelow(withId(R.id.release_date_textview)))
 
-        // Perform a click on the view that should open the fragment
-        onView(withId(R.id.homeItem)).perform(click());
+        // perform a click on the menu home item that should open the home fragment
+        onView(withId(R.id.homeItem)).perform(click())
 
-        // Check if the expected fragment is visible
-        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed()));
+        // check if the expected fragment is visible
+        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed()))
 
-        //details dugme radi sad
+        // menu details item doesn't work from home fragment
         onView(withId(R.id.gameDetailsItem)).check(matches(isEnabled()))
 
-        onView(withId(R.id.gameDetailsItem)).perform(click());
+        // perform clickOn the menu details item
+        onView(withId(R.id.gameDetailsItem)).perform(click())
 
-        //prikazana je posljednja igra
-        onView(withText(prvaIgra.description)).check(matches(isCompletelyDisplayed()))
+        // check if the last game we opened is displayed
+        onView(withText(prvaIgra.description)).perform(scrollTo()).check(matches(isCompletelyDisplayed()))
 
 
-        homeRule.scenario.onActivity { activity ->
-            // perform actions and assertions
-            activity.finish()
+        // change orientation to landscape
+        homeRule.scenario.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
+
+        // bottom navigation should not exist in landscape orientation
+        onView(withId(R.id.bottom_nav)).check(doesNotExist())
+
+        // check if the two expected fragments are displayed
+        onView(withId(R.id.fragment_details_parent)).check(matches(isDisplayed()))
+        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(R.id.fragment_details_parent)))
+
+        // change device orientation to portrait
+        homeRule.scenario.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+
+
+        // when we go back to portrait mode we should be able to use the app as if we just opened it
+        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed()))
+        onView(withId(R.id.fragment_details_parent)).check(doesNotExist())
+        onView(withId(R.id.bottom_nav)).check(matches(isDisplayed()))
+        onView(withId(R.id.gameDetailsItem)).check(matches(isNotEnabled()))
+
+        // onView(withId(R.id.homeItem)).check(matches(isNotEnabled()))
+
+
     }
 
+    /*
+       Scenarij 3.
+    */
     @Test
-    fun scenario2() {
+    fun scenario3() {
         // Set the orientation to portrait
         homeRule.scenario.onActivity {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
 
-        //ne treba biti navigacije
-
+        // bottom navigation should not exist in landscape orientation
         onView(withId(R.id.bottom_nav)).check(doesNotExist())
 
-        // Check if fragment2 is displayed
-        onView(withId(R.id.fragment_details_parent)).check(matches(isDisplayed()));
-        // Check if fragment1 is displayed i da li je home fragment kompletno sa lijeve str od details
+        // check if the two expected fragments are displayed
+        onView(withId(R.id.fragment_details_parent)).check(matches(isDisplayed()))
         onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(R.id.fragment_details_parent)))
 
 
         val prvaIgra = GameData.getAll()[0]
 
-        //provjerava da li je prvi put otvorena prva igra i layout kakav je ovo sam ostavila da malo zakomplikujem
+        // checking the new game_details_fragment layout and checking if the first game of the recycle view is shown in landscape orientation
         onView(withId(R.id.review_list)).check(hasItemCount(prvaIgra.userImpressions.size))
         onView(allOf(withId(R.id.description_textview),withText(prvaIgra.description)))
             .perform(scrollTo())
@@ -172,54 +264,44 @@ class OwnEspressoTests {
         onView(withId(R.id.cover_imageview))
             .check(isCompletelyAbove(allOf(withId(R.id.item_title_textview),withParent(withId(R.id.roditelj)))))
         onView(withId(R.id.description_text))
-            .check(matches(withText("Description")));
+            .check(matches(withText("Description")))
         onView(withId(R.id.aboutgame_textview))
-            .check(matches(withText("About game")));
+            .check(matches(withText("About game")))
         onView(withId(R.id.review_list))
             .check(isCompletelyBelow(withId(R.id.release_date_textview)))
 
-        //klik neke druge igre
 
+        // checking if onClick recycle view item opens another game
         val drugaIgra = GameData.getAll()[1]
         onView(withId(R.id.game_list)).perform(scrollToPosition<ViewHolder>(1),click())
-
-
-
-        //Check if fragment2 is displayed
-        onView(withId(R.id.fragment_details_parent)).check(matches(isDisplayed()));
-        // Check if fragment1 is displayed i da li je home fragment kompletno sa lijeve str od details
-        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(R.id.fragment_details_parent)))
-
-
-        //samo da vidimo jel druga igra prikazana
         onView(withText(drugaIgra.description))
             .perform(scrollTo())
             .check(matches(isCompletelyDisplayed()))
 
+
+        // checking if the fragments are still visible and in the right position
+        onView(withId(R.id.fragment_details_parent)).check(matches(isDisplayed()))
+        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(R.id.fragment_details_parent)))
+
+        // rotate device to portrait
         homeRule.scenario.onActivity {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
-        onView(withId(R.id.fragment_details_parent)).check(doesNotExist())
+        // when we go back to portrait mode we should be able to use the app as if we just opened it
         onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed()))
-
+        onView(withId(R.id.fragment_details_parent)).check(doesNotExist())
         onView(withId(R.id.bottom_nav)).check(matches(isDisplayed()))
-
-        //details dugme ne radi iz home fragment
         onView(withId(R.id.gameDetailsItem)).check(matches(isNotEnabled()))
 
-        //home dugme ne radi iz home fragment
-        onView(withId(R.id.homeItem)).check(matches(isNotEnabled()))
-
-        //valjda smo sad u details fragmentu
-
+        // recycle view onClick still works
         onView(withId(R.id.game_list)).perform(RecyclerViewActions.actionOnItem<ViewHolder>(allOf(
             hasDescendant(withText(prvaIgra.title)),
             hasDescendant(withText(prvaIgra.releaseDate)),
             hasDescendant(withText(prvaIgra.rating.toString()))
         ),click()))
 
-
     }
+
 
 }

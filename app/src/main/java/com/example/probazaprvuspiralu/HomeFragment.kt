@@ -40,7 +40,6 @@ class HomeFragment : Fragment() {
         gameViewer.adapter = gameViewerAdapter
         gameViewerAdapter.updateGames(gameList)
 
-
         //ovo ne vrijedi za landscape
         if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
             bottomNavigationView =

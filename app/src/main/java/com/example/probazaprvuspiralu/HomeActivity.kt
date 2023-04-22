@@ -39,6 +39,7 @@ class HomeActivity : AppCompatActivity() {
             navView = findViewById(R.id.bottom_nav)
             navView.setupWithNavController(navController)
             navController.navigate(R.id.homeItem) //every rotation refreshes the view as if we just opened the app
+
         }
 
     }

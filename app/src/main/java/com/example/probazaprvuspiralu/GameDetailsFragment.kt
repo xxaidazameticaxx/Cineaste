@@ -78,7 +78,6 @@ class GameDetailsFragment : Fragment() {
             val homeButton:BottomNavigationItemView = requireActivity().findViewById(R.id.homeItem)
 
             homeButton.setOnClickListener {
-
                 val navController = findNavController() //ovo vljd ostaje isto
                 val bundle = Bundle()
                 bundle.putString("game_title", game.title)
