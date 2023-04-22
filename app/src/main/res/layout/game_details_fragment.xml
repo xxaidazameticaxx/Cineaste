@@ -6,7 +6,7 @@
     android:fillViewport="true">
 
     <LinearLayout
-        android:id="@+id/ParentLinearLayout"
+        android:id="@+id/fragment_details_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -52,6 +52,7 @@
                     android:layout_gravity="center_horizontal"
                     android:background="#01579B"
                     android:gravity="center"
+                    android:id="@+id/roditelj"
                     android:orientation="horizontal">
 
                     <TextView
