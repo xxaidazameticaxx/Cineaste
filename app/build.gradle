@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.probazaprvuspiralu'
+    namespace 'ba.etf.rma23.projekat'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.probazaprvuspiralu"
+        applicationId "ba.etf.rma23.projekat"
         minSdk 29
         targetSdk 33
         versionCode 1

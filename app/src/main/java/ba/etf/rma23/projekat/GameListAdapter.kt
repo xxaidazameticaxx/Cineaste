@@ -1,4 +1,4 @@
-package com.example.probazaprvuspiralu
+package ba.etf.rma23.projekat
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class GameListAdapter (
     private var games: List<Game>,
-    private val onItemClicked: (game:Game) -> Unit
+    private val onItemClicked: (game: Game) -> Unit
 ) : RecyclerView.Adapter<GameListAdapter.GameViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
         val view = LayoutInflater

@@ -1,4 +1,4 @@
-package com.example.probazaprvuspiralu
+package ba.etf.rma23.projekat
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.probazaprvuspiralu.GameData.Companion.getAll
+import ba.etf.rma23.projekat.GameData.Companion.getAll
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -22,7 +22,7 @@ class HomeFragment : Fragment() {
     }
 
     private lateinit var gameViewer: RecyclerView
-    private lateinit var gameViewerAdapter:GameListAdapter
+    private lateinit var gameViewerAdapter: GameListAdapter
     private var gameList = getAll()
     private lateinit var bottomNavigationView:BottomNavigationView
     private lateinit var detailsButton:BottomNavigationItemView
@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
         if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
             val navController = requireActivity().findNavController(R.id.nav_host_fragment)
             navController.navigate(R.id.action_homeItem_to_gameDetailsItem, bundle)
-            isGameClicked=true //when we click on recycle view item it changes the companion object and stays the same
+            isGameClicked =true //when we click on recycle view item it changes the companion object and stays the same
         }
         else{
             val detailsNavController = requireActivity().findNavController(R.id.details_fragment)

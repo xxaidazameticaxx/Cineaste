@@ -1,4 +1,4 @@
-package com.example.probazaprvuspiralu
+package ba.etf.rma23.projekat
 
 import android.content.pm.ActivityInfo
 import android.view.View
@@ -51,7 +51,7 @@ class OwnEspressoTests {
 
     //ovo vljd ostaje
     @get:Rule
-    var homeRule:ActivityScenarioRule<HomeActivity> = ActivityScenarioRule(HomeActivity::class.java)
+    var homeRule:ActivityScenarioRule<MainActivity> = ActivityScenarioRule(MainActivity::class.java)
 
     /*
     Scenarij 1. šta testirate?, zašto? i kako osiguravate da test provjerava navedeno?
@@ -88,7 +88,9 @@ class OwnEspressoTests {
         // check if the details fragment is shown
         onView(withId(R.id.fragment_details_parent)).check(matches(isDisplayed()))
         // check if the home fragment is shown and is placed left of the details fragment
-        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(R.id.fragment_details_parent)))
+        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(
+            R.id.fragment_details_parent
+        )))
 
         // check if bottom navigation doesn't exist in landscape orientation
         onView(withId(R.id.bottom_nav)).check(doesNotExist())
@@ -158,12 +160,20 @@ class OwnEspressoTests {
 
         // testing the new game_details_fragment
         onView(withId(R.id.cover_imageview)).perform(scrollTo()).check(isCompletelyAbove(withId(R.id.item_title_textview)))
-        onView(withId(R.id.description_textview)).perform(scrollTo()).check(isCompletelyBelow(withId(R.id.item_title_textview)))
+        onView(withId(R.id.description_textview)).perform(scrollTo()).check(isCompletelyBelow(withId(
+            R.id.item_title_textview
+        )))
         onView(withId(R.id.description_text)) .perform(scrollTo()).check(matches(withText("Description")))
         onView(withId(R.id.aboutgame_textview)) .perform(scrollTo()).check(matches(withText("About game")))
-        onView(withId(R.id.publisher_textview)) .perform(scrollTo()).check(isCompletelyLeftOf(withId(R.id.genre_textview)))
-        onView(withId(R.id.esrb_rating_textview)) .perform(scrollTo()).check(isCompletelyLeftOf(withId(R.id.developer_textview)))
-        onView(withId(R.id.platform_textview)) .perform(scrollTo()).check(isCompletelyLeftOf(withId(R.id.release_date_textview)))
+        onView(withId(R.id.publisher_textview)) .perform(scrollTo()).check(isCompletelyLeftOf(withId(
+            R.id.genre_textview
+        )))
+        onView(withId(R.id.esrb_rating_textview)) .perform(scrollTo()).check(isCompletelyLeftOf(withId(
+            R.id.developer_textview
+        )))
+        onView(withId(R.id.platform_textview)) .perform(scrollTo()).check(isCompletelyLeftOf(withId(
+            R.id.release_date_textview
+        )))
         onView(withId(R.id.review_list)).perform(scrollTo()).check(isCompletelyBelow(withId(R.id.release_date_textview)))
 
         // perform a click on the menu home item that should open the home fragment
@@ -192,7 +202,9 @@ class OwnEspressoTests {
 
         // check if the two expected fragments are displayed
         onView(withId(R.id.fragment_details_parent)).check(matches(isDisplayed()))
-        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(R.id.fragment_details_parent)))
+        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(
+            R.id.fragment_details_parent
+        )))
 
         // change device orientation to portrait
         homeRule.scenario.onActivity {
@@ -226,7 +238,9 @@ class OwnEspressoTests {
 
         // check if the two expected fragments are displayed
         onView(withId(R.id.fragment_details_parent)).check(matches(isDisplayed()))
-        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(R.id.fragment_details_parent)))
+        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(
+            R.id.fragment_details_parent
+        )))
 
 
         val prvaIgra = GameData.getAll()[0]
@@ -281,7 +295,9 @@ class OwnEspressoTests {
 
         // checking if the fragments are still visible and in the right position
         onView(withId(R.id.fragment_details_parent)).check(matches(isDisplayed()))
-        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(R.id.fragment_details_parent)))
+        onView(withId(R.id.fragment_home_parent)).check(matches(isDisplayed())).check(isCompletelyLeftOf(withId(
+            R.id.fragment_details_parent
+        )))
 
         // rotate device to portrait
         homeRule.scenario.onActivity {

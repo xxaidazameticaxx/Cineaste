@@ -1,4 +1,4 @@
-package com.example.probazaprvuspiralu
+package ba.etf.rma23.projekat
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -8,7 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class HomeActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var navController:NavController
     private lateinit var homeNavController:NavController
     private lateinit var detailsNavController:NavController

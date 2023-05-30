@@ -93,6 +93,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="1921416621">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="RF8M33A8ZDZ" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="samsung&#10; SM-G973F" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

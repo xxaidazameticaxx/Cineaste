@@ -1,4 +1,4 @@
-package com.example.probazaprvuspiralu
+package ba.etf.rma23.projekat
 
 import android.content.Context
 import android.content.res.Configuration
@@ -28,7 +28,7 @@ class GameDetailsFragment : Fragment() {
     private lateinit var title : TextView
     private lateinit var genre: TextView
     private lateinit var impressionViewer: RecyclerView
-    private lateinit var impressionViewerAdapter:UserImpressionAdapter
+    private lateinit var impressionViewerAdapter: UserImpressionAdapter
     private var impressionList =listOf<UserImpression>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,7 +52,7 @@ class GameDetailsFragment : Fragment() {
             false
         )
 
-        impressionViewerAdapter=UserImpressionAdapter(impressionList)
+        impressionViewerAdapter= UserImpressionAdapter(impressionList)
         impressionViewer.adapter=impressionViewerAdapter
 
 
@@ -116,7 +116,7 @@ class GameDetailsFragment : Fragment() {
         val games: ArrayList<Game> = arrayListOf()
         games.addAll(GameData.getAll())
         val game = games.find { game -> name == game.title }
-        return game?:Game("Test","Test","Test",0.0,"Test","Test","","","","", emptyList())
+        return game?: Game("Test","Test","Test",0.0,"Test","Test","","","","", emptyList())
     }
 
 }
