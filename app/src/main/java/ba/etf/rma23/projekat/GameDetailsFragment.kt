@@ -34,6 +34,7 @@ class GameDetailsFragment : Fragment() {
     private lateinit var title : TextView
     private lateinit var genre: TextView
     private lateinit var impressionViewer: RecyclerView
+    private var gameId:Int = 0
     private lateinit var impressionViewerAdapter: UserImpressionAdapter
     //private var impressionList =listOf<UserImpression>()
 
@@ -65,9 +66,8 @@ class GameDetailsFragment : Fragment() {
         val extras = arguments
         if (extras != null) {
             //println("MAGIJA: ${extras.getInt("game_id")}") // Print the value of game.id to the terminal
-            game = getGameByTitle(extras.getString("game_title",""))
-            populateDetails()
-            //search(extras.getInt("game_id"))
+            search(extras.getString("game_name",""))
+            gameId= extras.getInt("game_id")
         } else {
             activity?.finish()
         }
@@ -119,14 +119,43 @@ class GameDetailsFragment : Fragment() {
 
     }
 
-    private fun getGameByTitle(name: String): Game {
+    private fun getGameByTitle(name: Int): Game {
         val games: ArrayList<Game> = arrayListOf()
         games.addAll(GameData.getAll())
-        val game = games.find { game -> name == game.title }
+        val game = games.find { game -> name == game.id }
         return game?: Game(1,"Test","Test","Test",0.0,"Test","Test","","","","", emptyList())
     }
 
+    fun search(query: String){
+        println("MAGIJA: $query") // Print the value of game.id to the terminal
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        // Create a new coroutine on the UI thread
+        scope.launch{
 
+            try {
+                // Make the network call and suspend execution until it finishes
+                val result = GamesRepository.getGamesByName(query)
 
+                // Display result of the network request to the user
+               onSuccess(result)
+            } catch (e: Exception) {
+                onError()
+            }
+        }
+    }
+
+    fun onSuccess(games: List<Game>){
+        games.forEach { gameIt ->
+            if (gameIt.id == gameId) {
+                this.game =gameIt
+            }
+        }
+
+        populateDetails()
+    }
+    fun onError() {
+        val toast = Toast.makeText(context, "Error while showing game details", Toast.LENGTH_SHORT)
+        toast.show()
+    }
 
 }

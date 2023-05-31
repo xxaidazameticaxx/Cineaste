@@ -45,6 +45,7 @@ object GamesRepository {
         }
     }
 
+    /*
     suspend fun getGameById(id: Int): Game {
         return withContext(Dispatchers.IO) {
             val response = IGDBApiConfig.retrofit.getGameById(id)
@@ -72,6 +73,37 @@ object GamesRepository {
 
 
             return@withContext game!!
+
+        }
+    }
+
+     */
+
+    suspend fun getGameById(id: Int): List<Game> {
+        return withContext(Dispatchers.IO) {
+            val response = IGDBApiConfig.retrofit.getGameById(id)
+
+            val gameResponses = response.body()
+
+            val games1 = gameResponses?.map { gameResponse ->
+                Game(
+                    id = gameResponse.id,
+                    title = gameResponse.title,
+                    releaseDate = gameResponse.releaseDate.toString(),
+                    platform = gameResponse.platforms?.get(0)?.name,
+                    rating = gameResponse.rating,
+                    description = gameResponse.summary,
+                    coverImage = gameResponse.cover?.coverUrl,
+                    esrbRating = null,
+                    developer = null,
+                    publisher = null,
+                    genre = null,
+                    userImpressions = null
+
+                )
+
+            }
+            return@withContext games1!!
 
         }
     }

@@ -1,5 +1,7 @@
 package ba.etf.rma23.projekat
 
+import java.io.Serializable
+
 data class Game(
     var id:Int,
     val title: String,
@@ -13,4 +15,5 @@ data class Game(
     val genre: String?,
     val description: String?,
     val userImpressions: List<UserImpression>?,
-)
+): Serializable
+

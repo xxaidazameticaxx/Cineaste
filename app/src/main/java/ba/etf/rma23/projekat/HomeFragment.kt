@@ -34,7 +34,6 @@ class HomeFragment : Fragment() {
     private lateinit var detailsButton:BottomNavigationItemView
     private lateinit var searchButton: ImageButton //spirala 3
     private lateinit var searchText:EditText //spirala 3
-    private var games:List<Game> = emptyList()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -50,7 +49,7 @@ class HomeFragment : Fragment() {
             LinearLayoutManager.VERTICAL,
             false
         )
-        gameViewerAdapter = GameListAdapter(games) { game -> showGameDetails(game) }
+        gameViewerAdapter = GameListAdapter(arrayListOf()) { game -> showGameDetails(game) }
         gameViewer.adapter = gameViewerAdapter
 
         //ovo ne vrijedi za landscape
@@ -91,8 +90,9 @@ class HomeFragment : Fragment() {
     private fun showGameDetails(game: Game) {
 
         val bundle = Bundle()
-        bundle.putString("game_title", game.title)
-        //println("CIRIBU: ${game.id}") // Print the value of game.id to the terminal
+        bundle.putInt("game_id", game.id)
+        bundle.putString("game_name", game.title)
+        println("CIRIBU: ${game.id}") // Print the value of game.id to the terminal
         if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
             val navController = requireActivity().findNavController(R.id.nav_host_fragment)
             navController.navigate(R.id.action_homeItem_to_gameDetailsItem, bundle)
