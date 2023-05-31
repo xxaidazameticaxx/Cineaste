@@ -66,7 +66,7 @@ class GameDetailsFragment : Fragment() {
         val extras = arguments
         if (extras != null) {
             //println("MAGIJA: ${extras.getInt("game_id")}") // Print the value of game.id to the terminal
-            search(extras.getString("game_name",""))
+            search(extras.getString("game_title",""))
             gameId= extras.getInt("game_id")
         } else {
             activity?.finish()
@@ -89,6 +89,7 @@ class GameDetailsFragment : Fragment() {
                 val navController = findNavController() //ovo vljd ostaje isto
                 val bundle = Bundle()
                 bundle.putString("game_title", game.title)
+                bundle.putInt("game_id", game.id)
                 navController.navigate(
                     R.id.action_gameDetailsItem_to_homeItem,
                     bundle
@@ -135,7 +136,6 @@ class GameDetailsFragment : Fragment() {
             try {
                 // Make the network call and suspend execution until it finishes
                 val result = GamesRepository.getGamesByName(query)
-
                 // Display result of the network request to the user
                onSuccess(result)
             } catch (e: Exception) {

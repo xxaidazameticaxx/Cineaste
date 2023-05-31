@@ -73,8 +73,10 @@ class HomeFragment : Fragment() {
                 val navController = findNavController()
                 //Bundle was set as the arguments for the HomeFragment
                 val gameTitle = arguments?.getString("game_title") ?: ""
+                val gameId = arguments?.getInt("game_id") ?: 0
                 val bundle = Bundle().apply {
                     putString("game_title", gameTitle)
+                    putInt("game_id", gameId)
                 }
                 navController.navigate(R.id.action_homeItem_to_gameDetailsItem, bundle)
             }
@@ -91,7 +93,7 @@ class HomeFragment : Fragment() {
 
         val bundle = Bundle()
         bundle.putInt("game_id", game.id)
-        bundle.putString("game_name", game.title)
+        bundle.putString("game_title", game.title)
         println("CIRIBU: ${game.id}") // Print the value of game.id to the terminal
         if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
             val navController = requireActivity().findNavController(R.id.nav_host_fragment)
