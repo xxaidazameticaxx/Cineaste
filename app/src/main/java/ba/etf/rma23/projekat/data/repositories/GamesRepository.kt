@@ -19,7 +19,7 @@ object GamesRepository {
                 Game(
                     id = gameResponse.id,
                     title = gameResponse.title,
-                    releaseDate = gameResponse.platforms?.get(0)?.versions?.get(0)?.human_dates?.get(0)?.human,
+                    releaseDate = gameResponse.releaseDates?.get(0)?.human,
                     platform = gameResponse.platforms?.get(0)?.name,
                     rating = gameResponse.rating,
                     description = gameResponse.summary,

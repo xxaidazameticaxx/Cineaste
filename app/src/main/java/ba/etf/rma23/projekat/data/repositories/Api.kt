@@ -10,7 +10,7 @@ interface Api {
     @GET("games")
     suspend fun getGamesByName(
         @Query("search") name:String,
-        @Query("fields") fields: String = "id,name,platforms.name,involved_companies.company.name,platforms.versions.platform_version_release_dates.human,rating,cover.url,genres.name,summary"
+        @Query("fields") fields: String = "id,name,platforms.name,involved_companies.company.name,release_dates.human,rating,cover.url,genres.name,summary"
     ): Response<List<GetGameResponse>>
 
     @GET("games")
