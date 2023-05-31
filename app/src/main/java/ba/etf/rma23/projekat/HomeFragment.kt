@@ -120,8 +120,7 @@ class HomeFragment : Fragment() {
             try {
                 // Make the network call and suspend execution until it finishes
                 val result = GamesRepository.getGamesByName(query)
-
-                // Display result of the network request to the user
+                // Use the result of the network request
                 onSuccess(result)
             } catch (e: Exception) {
                 onError()

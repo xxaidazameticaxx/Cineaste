@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma23.projekat.data.repositories.GamesRepository
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
@@ -34,9 +36,8 @@ class GameDetailsFragment : Fragment() {
     private lateinit var title : TextView
     private lateinit var genre: TextView
     private lateinit var impressionViewer: RecyclerView
-    private var gameId:Int = 0
     private lateinit var impressionViewerAdapter: UserImpressionAdapter
-    //private var impressionList =listOf<UserImpression>()
+    private var gameId:Int = 0 //spirala 3
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.game_details_fragment, container, false)
@@ -66,14 +67,16 @@ class GameDetailsFragment : Fragment() {
         val extras = arguments
         if (extras != null) {
             //println("MAGIJA: ${extras.getInt("game_id")}") // Print the value of game.id to the terminal
+
             search(extras.getString("game_title",""))
             gameId= extras.getInt("game_id")
+
         } else {
             activity?.finish()
         }
 
         //kad smo u portrait ne treba nam nista
-        if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) { //dodano
+        if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
             val bottomNavigationView:BottomNavigationView=
                 requireActivity().findViewById(R.id.bottom_nav)
 
@@ -111,33 +114,23 @@ class GameDetailsFragment : Fragment() {
         impressionViewerAdapter.updateImpressions(emptyList()) //ovo cudo!!
 
 
+
         val context: Context = cover.context
-        var id: Int = context.resources
-            .getIdentifier(game.coverImage, "drawable", context.packageName)
-        if (id==0) id=context.resources
-            .getIdentifier("picture1", "drawable", context.packageName)
-        cover.setImageResource(id)
+        Glide.with(context)
+            .load("https://"+game.coverImage)
+            .placeholder(R.drawable.picture1) // Placeholder image while loading
+            .error(R.drawable.picture1) // Image to display on error
+            .into(cover)
 
-    }
-
-    private fun getGameByTitle(name: Int): Game {
-        val games: ArrayList<Game> = arrayListOf()
-        games.addAll(GameData.getAll())
-        val game = games.find { game -> name == game.id }
-        return game?: Game(1,"Test","Test","Test",0.0,"Test","Test","","","","", emptyList())
     }
 
     fun search(query: String){
-        println("MAGIJA: $query") // Print the value of game.id to the terminal
+        //println("MAGIJA: $query") // Print the value of game.id to the terminal
         val scope = CoroutineScope(Job() + Dispatchers.Main)
-        // Create a new coroutine on the UI thread
         scope.launch{
-
             try {
-                // Make the network call and suspend execution until it finishes
                 val result = GamesRepository.getGamesByName(query)
-                // Display result of the network request to the user
-               onSuccess(result)
+                onSuccess(result)
             } catch (e: Exception) {
                 onError()
             }
@@ -145,12 +138,12 @@ class GameDetailsFragment : Fragment() {
     }
 
     fun onSuccess(games: List<Game>){
+        //Find the game from the bundle by comparing the id from the list of games searched by name and the bundle id sent from home fragment
         games.forEach { gameIt ->
             if (gameIt.id == gameId) {
                 this.game =gameIt
             }
         }
-
         populateDetails()
     }
     fun onError() {

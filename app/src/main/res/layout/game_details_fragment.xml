@@ -48,7 +48,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dip"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:background="#01579B"
                     android:gravity="center"
@@ -58,8 +58,9 @@
                     <TextView
                         android:id="@+id/item_title_textview"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textSize="24sp"
                         android:background="#01579B"
                         android:paddingLeft="20dp"
                         android:paddingTop="8dp"
@@ -67,7 +68,6 @@
                         android:text="TextView"
                         android:textAlignment="center"
                         android:textColor="#ffffffff"
-                        android:textSize="24sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
