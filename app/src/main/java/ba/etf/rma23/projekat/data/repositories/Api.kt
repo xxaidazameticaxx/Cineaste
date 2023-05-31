@@ -9,10 +9,16 @@ import retrofit2.http.Query
 interface Api {
     @Headers("Client-ID: x6cj1oyj882vhu0oa34j8bgg4gd5q9","Authorization:Bearer pb9vj3svlebnrkg9g7je38ioobdvo2","Content-Type: application/json")
 
-    @GET("movie/name")
+    @GET("games/")
     suspend fun getGamesByName(
-        @Query("fields") apiKey: String = "name",
-        @Query("search") search:String
-    ): Response<List<Game>>
+        @Query("search") name:String,
+        @Query("fields") fields: String = "id,name,platforms.name,first_release_date,rating,cover.url,genres.name,summary"
+    ): Response<List<GetGameResponse>>
+
+    @GET("games/")
+    suspend fun getGameById(
+        @Query("search") id:Int,
+        @Query("fields") fields: String = "id,name,platforms.name,first_release_date,rating,cover.url,genres.name,summary"
+    ): Response<GetGameResponse>
 
 }

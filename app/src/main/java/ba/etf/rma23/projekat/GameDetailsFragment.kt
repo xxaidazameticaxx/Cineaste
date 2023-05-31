@@ -8,12 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ba.etf.rma23.projekat.data.repositories.GamesRepository
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class GameDetailsFragment : Fragment() {
 
@@ -29,7 +35,7 @@ class GameDetailsFragment : Fragment() {
     private lateinit var genre: TextView
     private lateinit var impressionViewer: RecyclerView
     private lateinit var impressionViewerAdapter: UserImpressionAdapter
-    private var impressionList =listOf<UserImpression>()
+    //private var impressionList =listOf<UserImpression>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.game_details_fragment, container, false)
@@ -52,14 +58,16 @@ class GameDetailsFragment : Fragment() {
             false
         )
 
-        impressionViewerAdapter= UserImpressionAdapter(impressionList)
+        impressionViewerAdapter= UserImpressionAdapter(emptyList())
         impressionViewer.adapter=impressionViewerAdapter
 
 
         val extras = arguments
         if (extras != null) {
+            //println("MAGIJA: ${extras.getInt("game_id")}") // Print the value of game.id to the terminal
             game = getGameByTitle(extras.getString("game_title",""))
             populateDetails()
+            //search(extras.getInt("game_id"))
         } else {
             activity?.finish()
         }
@@ -99,8 +107,7 @@ class GameDetailsFragment : Fragment() {
         publisher.text=game.publisher
         genre.text=game.genre
         description.text=game.description
-        impressionList=game.userImpressions.sortedByDescending { it.timestamp }
-        impressionViewerAdapter.updateImpressions(impressionList) //ovo cudo!!
+        impressionViewerAdapter.updateImpressions(emptyList()) //ovo cudo!!
 
 
         val context: Context = cover.context
@@ -112,11 +119,14 @@ class GameDetailsFragment : Fragment() {
 
     }
 
-    private fun getGameByTitle(name:String): Game {
+    private fun getGameByTitle(name: String): Game {
         val games: ArrayList<Game> = arrayListOf()
         games.addAll(GameData.getAll())
         val game = games.find { game -> name == game.title }
-        return game?: Game("Test","Test","Test",0.0,"Test","Test","","","","", emptyList())
+        return game?: Game(1,"Test","Test","Test",0.0,"Test","Test","","","","", emptyList())
     }
+
+
+
 
 }
