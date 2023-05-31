@@ -8,7 +8,6 @@ data class GetGameResponse(
     @SerializedName("id") val id: Int,
     @SerializedName("name") val title: String,
     @SerializedName("platforms") val platforms: List<Platform>?,
-    @SerializedName("first_release_date") val releaseDate: Long?,
     @SerializedName("rating") val rating: Double?,
     @SerializedName("cover") val cover: Cover?,
     //@SerializedName("age_ratings") val esrbResponse: List<Esrb>?,
@@ -35,8 +34,21 @@ data class Company (
 )
 data class Platform(
     @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String
+    @SerializedName("name") val name: String,
+    @SerializedName("versions") val versions: List<Version>
 )
+
+
+data class Version(
+    @SerializedName("id") val id: Int,
+    @SerializedName("platform_version_release_dates") val human_dates: List<HumanDate>
+)
+
+data class HumanDate(
+    @SerializedName("id") val id: Int,
+    @SerializedName("human") val human: String
+)
+
 
 data class Cover(
     @SerializedName("id") val id: Int,
