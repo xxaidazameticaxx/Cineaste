@@ -1,8 +1,6 @@
 package ba.etf.rma23.projekat.data.repositories
 
 import ba.etf.rma23.projekat.Game
-import ba.etf.rma23.projekat.UserImpression
-import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
