@@ -24,7 +24,7 @@ object GamesRepository {
                     rating = gameResponse.rating,
                     description = gameResponse.summary,
                     coverImage = gameResponse.cover?.coverUrl,
-                    esrbRating = null,
+                    esrbRating = help(gameResponse.esrbRating),
                     developer = gameResponse.involvedCompanies?.get(0)?.company?.name,
                     publisher = gameResponse.involvedCompanies?.get(0)?.company?.name,
                     genre = gameResponse.genres?.get(0)?.name,
@@ -37,5 +37,12 @@ object GamesRepository {
 
         }
     }
+
+
+    private fun help(esrbRating: List<AgeRating>?): String? {
+        val matchingAgeRating = esrbRating?.find { it.category == 2 } ?: esrbRating?.find { it.category == 1 }
+        return matchingAgeRating?.ratings?.toString()
+    }
+
 
 }

@@ -10,14 +10,17 @@ interface Api {
     @GET("games")
     suspend fun getGamesByName(
         @Query("search") name:String,
-        @Query("fields") fields: String = "id,name,platforms.name,involved_companies.company.name,release_dates.human,rating,cover.url,genres.name,summary"
+        @Query("fields") fields: String = "id,name,platforms.name,involved_companies.company.name,age_ratings.rating,age_ratings.category,release_dates.human,rating,cover.url,genres.name,summary"
     ): Response<List<GetGameResponse>>
 
+    /*
     @GET("games")
     suspend fun getGameById(
         @Query("id") id:Int,
         @Query("fields") fields: String = "id,name,platforms.name,first_release_date,rating,cover.url,genres.name,summary"
     ): Response<List<GetGameResponse>>
 
+
+     */
 
 }

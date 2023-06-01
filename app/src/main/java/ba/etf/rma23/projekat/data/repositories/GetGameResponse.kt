@@ -11,11 +11,16 @@ data class GetGameResponse(
     @SerializedName("release_dates") val releaseDates: List<ReleaseDate>?,
     @SerializedName("rating") val rating: Double?,
     @SerializedName("cover") val cover: Cover?,
-    //@SerializedName("age_ratings") val esrbResponse: List<Esrb>?,
+    @SerializedName("age_ratings") val esrbRating: List<AgeRating>?,
     @SerializedName("genres") val genres: List<Genre>?,
     @SerializedName("involved_companies") val involvedCompanies:List<InvolvedCompanies>?,
     @SerializedName("summary") val summary: String?
 
+)
+
+data class AgeRating(
+    @SerializedName("category") val category: Int, //myb
+    @SerializedName("rating") val ratings: Int //myb
 )
 
 
