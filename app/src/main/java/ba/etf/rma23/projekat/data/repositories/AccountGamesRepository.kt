@@ -54,26 +54,27 @@ object AccountGamesRepository {
 
      */
 
-    suspend fun getSavedGames():List<Game> {
-
+    suspend fun getSavedGames(): List<Game> {
         return withContext(Dispatchers.IO) {
             val response = AccountApiConfig.retrofit.getSavedGames()
-
             val gameResponses = response.body()
+
+            val updatedGames = mutableListOf<Game>() // Create a new list
 
             gameResponses?.let { responses ->
                 for (gameResponse in responses) {
-                    games.add(GamesRepository.getGameById(gameResponse.igdb_id))
+                    val game = GamesRepository.getGameById(gameResponse.igdb_id)
+                    updatedGames.add(game)
                 }
             }
 
+            games.clear() // Clear the existing list
+            games.addAll(updatedGames) // Add the updated games to the list
+
             return@withContext games
-
         }
-
-
-
     }
+
 
     fun search(query: String, igdbId: Int) {
         //println("MAGIJA: $query") // Print the value of game.id to the terminal
