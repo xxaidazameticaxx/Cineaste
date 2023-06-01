@@ -11,5 +11,4 @@
         android:icon="@drawable/back_icon"
         android:title="Game details"
         />
-
 </menu>

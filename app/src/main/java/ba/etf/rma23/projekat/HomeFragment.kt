@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
 import ba.etf.rma23.projekat.data.repositories.GamesRepository
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -35,11 +36,9 @@ class HomeFragment : Fragment() {
     private lateinit var searchButton: ImageButton //spirala 3
     private lateinit var searchText:EditText //spirala 3
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.home_fragment, container, false)
 
-        //view.findViewById finds views within the inflated layout of the fragment
         searchButton = view.findViewById(R.id.search_button) //spirala 3
         searchText=view.findViewById(R.id.search_query_edittext) //spirala 3
 
@@ -83,9 +82,12 @@ class HomeFragment : Fragment() {
 
         }
 
+        searchFavouriteGames()
+
         searchButton.setOnClickListener {
-            onClick()
+            onClickSearch()
         }
+
         return view
     }
 
@@ -94,7 +96,7 @@ class HomeFragment : Fragment() {
         val bundle = Bundle()
         bundle.putInt("game_id", game.id)
         bundle.putString("game_title", game.title)
-        println("CIRIBU: ${game.id}") // Print the value of game.id to the terminal
+        //println("CIRIBU: ${game.id}") // Print the value of game.id to the terminal
         if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
             val navController = requireActivity().findNavController(R.id.nav_host_fragment)
             navController.navigate(R.id.action_homeItem_to_gameDetailsItem, bundle)
@@ -106,34 +108,57 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun onClick() {
+    private fun onClickSearch() {
         val toast = Toast.makeText(context, "Search start", Toast.LENGTH_SHORT)
         toast.show()
         search(searchText.text.toString())
     }
 
+
     fun search(query: String){
         val scope = CoroutineScope(Job() + Dispatchers.Main)
-        // Create a new coroutine on the UI thread
-        scope.launch{
 
+        scope.launch{
             try {
-                // Make the network call and suspend execution until it finishes
                 val result = GamesRepository.getGamesByName(query)
-                // Use the result of the network request
                 onSuccess(result)
             } catch (e: Exception) {
                 onError()
             }
         }
     }
-    fun onSuccess(games: List<Game>){
+
+    fun searchFavouriteGames() {
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        // Create a new coroutine on the UI thread
+        scope.launch{
+
+            try {
+                val result = AccountGamesRepository.getSavedGames()
+                onSuccessFavourites(result)
+            } catch (e: Exception) {
+                onError1()
+            }
+        }
+    }
+    fun onSuccessFavourites(games: List<Game>) {
+        val toast = Toast.makeText(context, "Favourites games shown", Toast.LENGTH_SHORT)
+        toast.show()
+        gameViewerAdapter.updateGames(games)
+    }
+
+    fun onSuccess(games: List<Game>) {
         val toast = Toast.makeText(context, "Searched games found", Toast.LENGTH_SHORT)
         toast.show()
         gameViewerAdapter.updateGames(games)
     }
     fun onError() {
         val toast = Toast.makeText(context, "Search error", Toast.LENGTH_SHORT)
+        toast.show()
+    }
+
+    fun onError1() {
+        val toast = Toast.makeText(context, "Favourites error", Toast.LENGTH_SHORT)
         toast.show()
     }
 

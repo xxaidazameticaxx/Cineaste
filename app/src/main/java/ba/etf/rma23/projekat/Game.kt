@@ -2,7 +2,7 @@ package ba.etf.rma23.projekat
 
 data class Game(
     var id:Int,
-    val title: String,
+    var title: String,
     val platform: String?,
     val releaseDate: String?,
     val rating: Double?,
