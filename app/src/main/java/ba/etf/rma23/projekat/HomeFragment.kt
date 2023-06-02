@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
         gameViewerAdapter = GameListAdapter(arrayListOf()) { game -> showGameDetails(game) }
         gameViewer.adapter = gameViewerAdapter
 
-        //ovo ne vrijedi za landscape
+
         if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
             bottomNavigationView =
                 requireActivity().findViewById(R.id.bottom_nav)
@@ -70,11 +70,8 @@ class HomeFragment : Fragment() {
 
             detailsButton.setOnClickListener {
                 val navController = findNavController()
-                //Bundle was set as the arguments for the HomeFragment
-                val gameTitle = arguments?.getString("game_title") ?: ""
                 val gameId = arguments?.getInt("game_id") ?: 0
                 val bundle = Bundle().apply {
-                    putString("game_title", gameTitle)
                     putInt("game_id", gameId)
                 }
                 navController.navigate(R.id.action_homeItem_to_gameDetailsItem, bundle)
@@ -95,7 +92,6 @@ class HomeFragment : Fragment() {
 
         val bundle = Bundle()
         bundle.putInt("game_id", game.id)
-        bundle.putString("game_title", game.title)
         //println("CIRIBU: ${game.id}") // Print the value of game.id to the terminal
         if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE){
             val navController = requireActivity().findNavController(R.id.nav_host_fragment)
@@ -130,9 +126,7 @@ class HomeFragment : Fragment() {
 
     fun searchFavouriteGames() {
         val scope = CoroutineScope(Job() + Dispatchers.Main)
-        // Create a new coroutine on the UI thread
         scope.launch{
-
             try {
                 val result = AccountGamesRepository.getSavedGames()
                 onSuccessFavourites(result)
@@ -142,7 +136,7 @@ class HomeFragment : Fragment() {
         }
     }
     fun onSuccessFavourites(games: List<Game>) {
-        val toast = Toast.makeText(context, "Favourites games shown", Toast.LENGTH_SHORT)
+        val toast = Toast.makeText(context, "Favourites games found", Toast.LENGTH_SHORT)
         toast.show()
         gameViewerAdapter.updateGames(games)
     }
