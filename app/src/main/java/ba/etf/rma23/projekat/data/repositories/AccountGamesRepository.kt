@@ -2,11 +2,13 @@ package ba.etf.rma23.projekat.data.repositories
 
 import ba.etf.rma23.projekat.Game
 import kotlinx.coroutines.*
-
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 
 object AccountGamesRepository {
 
     private var games =ArrayList<Game>()
+    private lateinit var savedGame:Game
     private var aid: String = "5a13938a-1932-4ba9-b8cf-b23b22dca53a"
     private var age: Int = 21
 
@@ -50,5 +52,31 @@ object AccountGamesRepository {
         }
     }
 
+    suspend fun saveHelp(game: Game) : GetSwaggerGameResponse?{
+        return withContext(Dispatchers.IO) {
 
+
+            //val body =
+            // val body = ResponseHelp("{\"game\":{\"igdb_id\":${game.id},\"name\":\"${game.title}\"}")
+
+
+            val response = AccountApiConfig.retrofit.saveGame(getHash(),ResponseHelp(GetSwaggerGameResponse(game.id,game.title)))
+
+            val gameResponse = response.body()
+
+
+
+
+            return@withContext gameResponse
+
+        }
+    }
+    suspend fun saveGame(game:Game): Game? {
+
+        val swagger = saveHelp(game)
+        return GamesRepository.getGameById(swagger!!.igdb_id)
+
+
+
+    }
 }

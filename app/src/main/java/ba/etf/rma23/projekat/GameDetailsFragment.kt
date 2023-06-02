@@ -1,11 +1,13 @@
 package ba.etf.rma23.projekat
 
+import android.accounts.Account
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
 import ba.etf.rma23.projekat.data.repositories.GamesRepository
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
@@ -35,6 +38,8 @@ class GameDetailsFragment : Fragment() {
     private lateinit var title : TextView
     private lateinit var genre: TextView
     private lateinit var impressionViewer: RecyclerView
+    private lateinit var saveButton:ImageButton
+    private lateinit var deleteButton:ImageButton
     private lateinit var impressionViewerAdapter: UserImpressionAdapter
     private var gameId:Int = 0 //spirala 3
 
@@ -50,6 +55,8 @@ class GameDetailsFragment : Fragment() {
         publisher = view.findViewById(R.id.publisher_textview)
         genre = view.findViewById(R.id.genre_textview)
         description = view.findViewById(R.id.description_textview)
+        saveButton = view.findViewById(R.id.save_button)
+        deleteButton = view.findViewById(R.id.delete_button)
 
 
         impressionViewer = view.findViewById(R.id.review_list)
@@ -95,7 +102,21 @@ class GameDetailsFragment : Fragment() {
                 ) //sends game title as a bundle to the home fragment easier than saving the game
             }
         }
+
+        saveButton.setOnClickListener {
+            onClickSaveButton()
+        }
         return view
+    }
+
+    private fun onClickSaveButton(){
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch{
+
+                AccountGamesRepository.saveGame(game)!!
+
+
+        }
     }
 
     private fun populateDetails() {
@@ -131,6 +152,10 @@ class GameDetailsFragment : Fragment() {
         }
     }
 
+    fun onSuccessSaved(){
+        val toast = Toast.makeText(context, "Game added to favourites", Toast.LENGTH_SHORT)
+        toast.show()
+    }
     fun onSuccess(game: Game){
         val toast = Toast.makeText(context, "Game details found", Toast.LENGTH_SHORT)
         toast.show()
@@ -139,6 +164,11 @@ class GameDetailsFragment : Fragment() {
     }
     fun onError() {
         val toast = Toast.makeText(context, "Error while showing game details", Toast.LENGTH_SHORT)
+        toast.show()
+    }
+
+    fun onErrorSaved() {
+        val toast = Toast.makeText(context, "Error while saving game", Toast.LENGTH_SHORT)
         toast.show()
     }
 

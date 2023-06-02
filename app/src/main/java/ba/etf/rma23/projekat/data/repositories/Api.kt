@@ -29,4 +29,13 @@ interface Api {
         @Path("aid") aid:String = getHash()
     ): Response<List<GetSwaggerGameResponse>>
 
+
+    @Headers("Content-Type: application/json")
+
+    @POST("/account/{aid}/game")
+    suspend fun saveGame(
+        @Path("aid") aid:String,
+        @Body body : ResponseHelp
+    ): Response<GetSwaggerGameResponse>
+
 }
