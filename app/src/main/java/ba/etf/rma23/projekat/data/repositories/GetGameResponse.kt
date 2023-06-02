@@ -19,8 +19,8 @@ data class GetGameResponse(
 )
 
 data class AgeRating(
-    @SerializedName("category") val category: Int, //myb
-    @SerializedName("rating") val ratings: Int //myb
+    @SerializedName("category") val category: Int,
+    @SerializedName("rating") val ratings: Int
 )
 
 

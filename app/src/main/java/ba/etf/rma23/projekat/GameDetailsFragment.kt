@@ -112,31 +112,14 @@ class GameDetailsFragment : Fragment() {
     private fun onClickSaveButton(){
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
-
+            try {
                 AccountGamesRepository.saveGame(game)!!
-
+                onSuccessSaved()
+            } catch (e: Exception) {
+                onErrorSaved()
+            }
 
         }
-    }
-
-    private fun populateDetails() {
-        title.text=game.title
-        releaseDate.text=game.releaseDate
-        platform.text=game.platform
-        developer.text=game.developer
-        esrbRating.text=game.esrbRating
-        publisher.text=game.publisher
-        genre.text=game.genre
-        description.text=game.description
-        impressionViewerAdapter.updateImpressions(emptyList())
-
-        val context: Context = cover.context
-        Glide.with(context)
-            .load("https://"+game.coverImage)
-            .placeholder(R.drawable.picture1) // Placeholder image while loading
-            .error(R.drawable.picture1) // Image to display on error
-            .into(cover)
-
     }
 
     fun searchById(query: Int){
@@ -157,8 +140,6 @@ class GameDetailsFragment : Fragment() {
         toast.show()
     }
     fun onSuccess(game: Game){
-        val toast = Toast.makeText(context, "Game details found", Toast.LENGTH_SHORT)
-        toast.show()
         this.game = game
         populateDetails()
     }
@@ -170,6 +151,26 @@ class GameDetailsFragment : Fragment() {
     fun onErrorSaved() {
         val toast = Toast.makeText(context, "Error while saving game", Toast.LENGTH_SHORT)
         toast.show()
+    }
+
+    private fun populateDetails() {
+        title.text=game.title
+        releaseDate.text=game.releaseDate
+        platform.text=game.platform
+        developer.text=game.developer
+        esrbRating.text=game.esrbRating
+        publisher.text=game.publisher
+        genre.text=game.genre
+        description.text=game.description
+        impressionViewerAdapter.updateImpressions(emptyList())
+
+        val context: Context = cover.context
+        Glide.with(context)
+            .load("https://"+game.coverImage)
+            .placeholder(R.drawable.picture1) // Placeholder image while loading
+            .error(R.drawable.picture1) // Image to display on error
+            .into(cover)
+
     }
 
 }

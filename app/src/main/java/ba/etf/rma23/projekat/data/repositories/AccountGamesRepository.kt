@@ -55,28 +55,17 @@ object AccountGamesRepository {
     suspend fun saveHelp(game: Game) : GetSwaggerGameResponse?{
         return withContext(Dispatchers.IO) {
 
-
-            //val body =
-            // val body = ResponseHelp("{\"game\":{\"igdb_id\":${game.id},\"name\":\"${game.title}\"}")
-
-
             val response = AccountApiConfig.retrofit.saveGame(getHash(),ResponseHelp(GetSwaggerGameResponse(game.id,game.title)))
-
             val gameResponse = response.body()
-
-
-
 
             return@withContext gameResponse
 
         }
     }
-    suspend fun saveGame(game:Game): Game? {
+    suspend fun saveGame(game:Game): Game {
 
         val swagger = saveHelp(game)
         return GamesRepository.getGameById(swagger!!.igdb_id)
-
-
 
     }
 }
