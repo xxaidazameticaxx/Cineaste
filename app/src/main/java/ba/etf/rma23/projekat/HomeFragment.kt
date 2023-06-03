@@ -35,6 +35,7 @@ class HomeFragment : Fragment() {
     private lateinit var searchText:EditText //spirala 3
     private lateinit var favoriteCheckBox:CheckBox
     private lateinit var sortButton:ImageView
+    private lateinit var ageInputText:EditText
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.home_fragment, container, false)
@@ -43,6 +44,7 @@ class HomeFragment : Fragment() {
         searchText=view.findViewById(R.id.search_query_edittext) //spirala 3
         favoriteCheckBox=view.findViewById(R.id.favourites_checkBox)
         sortButton=view.findViewById(R.id.sort_button)
+        ageInputText=view.findViewById(R.id.age_edit_text)
 
         gameViewer = view.findViewById(R.id.game_list)
         gameViewer.layoutManager = LinearLayoutManager(
@@ -88,7 +90,22 @@ class HomeFragment : Fragment() {
                 searchContainingString(searchText.text.toString())
             }
             else {
-                search(searchText.text.toString())
+
+                if (ageInputText.text.isNotEmpty()) {
+                    val age = ageInputText.text.toString().toInt()
+                    if (AccountGamesRepository.setAge(age)) {
+                        searchAgeSafeGames(searchText.text.toString())
+                    }
+                    else{
+                        val toast = Toast.makeText(context, "Insert age between 3 and 100", Toast.LENGTH_SHORT)
+                        toast.show()
+                    }
+                }
+                else{
+                    search(searchText.text.toString())
+                }
+
+
             }
         }
 
@@ -122,7 +139,14 @@ class HomeFragment : Fragment() {
         }
     }
 
+    fun searchAgeSafeGames(name: String) {
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
 
+        scope.launch{
+            val result = GamesRepository.getGamesSafe(name)
+            onSuccess(result)
+        }
+    }
 
 
     fun search(query: String){
@@ -143,14 +167,9 @@ class HomeFragment : Fragment() {
         scope.launch{
 
                 val result = AccountGamesRepository.getSavedGames()
-                onSuccessFavourites(result)
+                gameViewerAdapter.updateGames(result)
 
         }
-    }
-    fun onSuccessFavourites(games: List<Game>) {
-        val toast = Toast.makeText(context, "Favourites games found", Toast.LENGTH_SHORT)
-        toast.show()
-        gameViewerAdapter.updateGames(games)
     }
 
     fun onSuccess(games: List<Game>) {

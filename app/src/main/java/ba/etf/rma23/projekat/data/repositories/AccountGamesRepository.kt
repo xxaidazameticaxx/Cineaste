@@ -10,7 +10,7 @@ object AccountGamesRepository {
 
     private var games =ArrayList<Game>()
     private var aid: String = "5a13938a-1932-4ba9-b8cf-b23b22dca53a"
-    private var age: Int = 21
+    private var age: Int? = null
 
 
     fun setHash(acHash: String): Boolean {
@@ -29,6 +29,10 @@ object AccountGamesRepository {
             return true
         }
         return false
+    }
+
+    fun getAge(): Int? {
+        return age
     }
 
     suspend fun getSavedGames(): List<Game> {

@@ -1,6 +1,5 @@
 package ba.etf.rma23.projekat.data.repositories
 
-import androidx.compose.ui.text.substring
 import ba.etf.rma23.projekat.Game
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -79,6 +78,37 @@ object GamesRepository {
     private fun roundRating(rating: Double?): Double? {
         val ratingString = rating?.toString()
         return ratingString?.take(4)?.toDoubleOrNull()
+    }
+
+    suspend fun getGamesSafe(name: String): List<Game> {
+        return withContext(Dispatchers.IO) {
+            val savedGames = getGamesByName(name)
+            val gamesSearchResult= ArrayList<Game>()
+            for (game in savedGames) {
+                val ageRating = game.esrbRating?.toInt()
+                if (ageRating != null) {
+                    if(AccountGamesRepository.getAge()!! >= 18)
+                        gamesSearchResult.add(game)
+                    else if(AccountGamesRepository.getAge() == 17 && ageRating!= 12 && ageRating!=5)
+                        gamesSearchResult.add(game)
+                    else if(AccountGamesRepository.getAge() == 16 && ageRating!= 12 && ageRating!=5 && ageRating!=11)
+                        gamesSearchResult.add(game)
+                    else if(AccountGamesRepository.getAge() in 13..15 && ageRating!= 12 && ageRating!=5 && ageRating!=11 && ageRating!=4)
+                        gamesSearchResult.add(game)
+                    else if(AccountGamesRepository.getAge() == 12 && ageRating!= 12 && ageRating!=5 && ageRating!=11 && ageRating!=4 && ageRating!=10)
+                        gamesSearchResult.add(game)
+                    else if(AccountGamesRepository.getAge() in 10.. 11 && ageRating!= 12 && ageRating!=5 && ageRating!=11 && ageRating!=4 && ageRating!=10 && ageRating!=3)
+                        gamesSearchResult.add(game)
+                    else if(AccountGamesRepository.getAge() in 7.. 9 && ageRating!= 12 && ageRating!=5 && ageRating!=11 && ageRating!=4 && ageRating!=10 && ageRating!=3 && ageRating!=9)
+                        gamesSearchResult.add(game)
+                    else if(AccountGamesRepository.getAge() in 3.. 6 && ageRating!= 12 && ageRating!=5 && ageRating!=11 && ageRating!=4 && ageRating!=10 && ageRating!=3 && ageRating!=9 && ageRating!=2)
+                        gamesSearchResult.add(game)
+                }
+                else gamesSearchResult.clear()
+            }
+            return@withContext gamesSearchResult
+        }
+
     }
 
 }
