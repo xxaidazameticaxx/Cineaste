@@ -38,4 +38,11 @@ interface Api {
         @Body body : ResponseHelp
     ): Response<GetSwaggerGameResponse>
 
+    @Headers("Content-Type: application/json")
+
+    @DELETE("/account/{aid}/game/{gid}/")
+    suspend fun removeGame(
+        @Path("aid") aid:String,
+        @Path("gid") gid:Int
+    )
 }

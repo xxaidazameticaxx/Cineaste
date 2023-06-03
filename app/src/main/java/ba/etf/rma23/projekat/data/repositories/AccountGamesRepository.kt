@@ -65,4 +65,15 @@ object AccountGamesRepository {
         }
     }
 
+    suspend fun removeGame(game: Game): Boolean {
+        return withContext(Dispatchers.IO) {
+
+            AccountApiConfig.retrofit.removeGame(getHash(),game.id)
+
+            return@withContext true;
+
+
+        }
+    }
+
 }

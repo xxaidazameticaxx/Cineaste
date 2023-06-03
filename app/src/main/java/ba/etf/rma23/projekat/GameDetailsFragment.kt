@@ -106,14 +106,30 @@ class GameDetailsFragment : Fragment() {
         saveButton.setOnClickListener {
             onClickSaveButton()
         }
+
+        deleteButton.setOnClickListener {
+            onClickDeleteButton()
+        }
         return view
+    }
+
+
+    private fun onClickDeleteButton() {
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch{
+
+                AccountGamesRepository.removeGame(game)
+                onSuccessRemoved()
+
+
+        }
     }
 
     private fun onClickSaveButton(){
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
             try {
-                AccountGamesRepository.saveGame(game)!!
+                AccountGamesRepository.saveGame(game)
                 onSuccessSaved()
             } catch (e: Exception) {
                 onErrorSaved()
@@ -152,6 +168,12 @@ class GameDetailsFragment : Fragment() {
         val toast = Toast.makeText(context, "Error while saving game", Toast.LENGTH_SHORT)
         toast.show()
     }
+
+    private fun onSuccessRemoved() {
+        val toast = Toast.makeText(context, "Game removed from favourites", Toast.LENGTH_SHORT)
+        toast.show()
+    }
+
 
     private fun populateDetails() {
         title.text=game.title
