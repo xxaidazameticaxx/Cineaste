@@ -31,18 +31,20 @@ class HomeFragment : Fragment() {
     private lateinit var gameViewerAdapter: GameListAdapter
     private lateinit var bottomNavigationView:BottomNavigationView
     private lateinit var detailsButton:BottomNavigationItemView
-    private lateinit var searchButton: ImageButton //spirala 3
-    private lateinit var searchText:EditText //spirala 3
+    private lateinit var searchButton: ImageButton
+    private lateinit var searchText:EditText
     private lateinit var favoriteCheckBox:CheckBox
+    private lateinit var removeSafeButton:Button
     private lateinit var sortButton:ImageView
     private lateinit var ageInputText:EditText
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.home_fragment, container, false)
 
-        searchButton = view.findViewById(R.id.search_button) //spirala 3
-        searchText=view.findViewById(R.id.search_query_edittext) //spirala 3
+        searchButton = view.findViewById(R.id.search_button)
+        searchText=view.findViewById(R.id.search_query_edittext)
         favoriteCheckBox=view.findViewById(R.id.favourites_checkBox)
+        removeSafeButton=view.findViewById(R.id.remove_safe_button)
         sortButton=view.findViewById(R.id.sort_button)
         ageInputText=view.findViewById(R.id.age_edit_text)
 
@@ -109,9 +111,31 @@ class HomeFragment : Fragment() {
             }
         }
 
+        removeSafeButton.setOnClickListener{
 
+            if (ageInputText.text.isNotEmpty()) {
+                val age = ageInputText.text.toString().toInt()
+                if (AccountGamesRepository.setAge(age)) {
+                    removeNonSafeGames()
+                }
+                else{
+                    val toast = Toast.makeText(context, "Insert age between 3 and 100", Toast.LENGTH_SHORT)
+                    toast.show()
+                }
+            }
+        }
 
         return view
+    }
+
+    private fun removeNonSafeGames() {
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch{
+
+            val result = AccountGamesRepository.removeNonSafeHelp()
+            gameViewerAdapter.updateGames(result)
+
+        }
     }
 
     private fun showGameDetails(game: Game) {

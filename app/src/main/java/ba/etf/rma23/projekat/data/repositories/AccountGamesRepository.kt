@@ -1,10 +1,7 @@
 package ba.etf.rma23.projekat.data.repositories
 
-import android.widget.Toast
 import ba.etf.rma23.projekat.Game
 import kotlinx.coroutines.*
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 
 object AccountGamesRepository {
 
@@ -89,10 +86,54 @@ object AccountGamesRepository {
 
             AccountApiConfig.retrofit.removeGame(getHash(),game.id)
 
-            return@withContext true;
+            return@withContext true
 
 
         }
+    }
+
+    suspend fun removeNonSafe():Boolean{
+
+        return withContext(Dispatchers.IO) {
+
+            val savedGames = getSavedGames()
+
+            val age = getAge()
+
+            for (game in savedGames) {
+                val ageRating = game.esrbRating?.toInt()
+                if (ageRating != null) {
+                    if(age == 17 && (ageRating== 12 || ageRating==5))
+                        removeGame(game)
+                    else if(age == 16 && (ageRating!= 12 && ageRating!=5 && ageRating!=11))
+                        removeGame(game)
+                    else if(age in 13..15 && (ageRating == 12 || ageRating==5 || ageRating==11 || ageRating==4))
+                        removeGame(game)
+                    else if(age == 12 && (ageRating== 12 || ageRating==5 || ageRating==11 || ageRating==4 || ageRating==10))
+                        removeGame(game)
+                    else if(age in 10.. 11 && (ageRating==12 || ageRating==5 || ageRating==11 || ageRating==4 || ageRating==10 || ageRating==3))
+                        removeGame(game)
+                    else if(age in 7.. 9 && (ageRating== 12 || ageRating==5 || ageRating==11 || ageRating==4 || ageRating==10 || ageRating==3 || ageRating==9))
+                        removeGame(game)
+                    else if(age in 3.. 6 && (ageRating== 12 || ageRating==5 || ageRating==11 || ageRating==4 || ageRating==10 || ageRating==3 || ageRating==9 || ageRating==2))
+                        removeGame(game)
+                }
+
+            }
+
+            return@withContext true
+        }
+
+    }
+
+    suspend fun removeNonSafeHelp(): List<Game> {
+
+        return withContext(Dispatchers.IO) {
+
+            removeNonSafe()
+            return@withContext getSavedGames()
+        }
+
     }
 
 
