@@ -40,7 +40,7 @@ object AccountGamesRepository {
 
             gameResponses?.let { responses ->
                 for (gameResponse in responses) {
-                    val game = GamesRepository.getGameById(gameResponse.igdb_id)
+                    val game = GamesRepository.getGameById(gameResponse.igdb_id!!)
                     updatedGames.add(game)
                 }
             }
@@ -52,20 +52,17 @@ object AccountGamesRepository {
         }
     }
 
-    suspend fun saveHelp(game: Game) : GetSwaggerGameResponse?{
+    suspend fun saveGame(game: Game) : Game{
         return withContext(Dispatchers.IO) {
 
             val response = AccountApiConfig.retrofit.saveGame(getHash(),ResponseHelp(GetSwaggerGameResponse(game.id,game.title)))
             val gameResponse = response.body()
 
-            return@withContext gameResponse
+
+                return@withContext GamesRepository.getGameById(gameResponse?.igdb_id!!)
+
 
         }
     }
-    suspend fun saveGame(game:Game): Game {
 
-        val swagger = saveHelp(game)
-        return GamesRepository.getGameById(swagger!!.igdb_id)
-
-    }
 }

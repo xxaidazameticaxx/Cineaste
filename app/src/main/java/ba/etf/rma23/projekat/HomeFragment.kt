@@ -127,12 +127,10 @@ class HomeFragment : Fragment() {
     fun searchFavouriteGames() {
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
-            try {
+
                 val result = AccountGamesRepository.getSavedGames()
                 onSuccessFavourites(result)
-            } catch (e: Exception) {
-                onError1()
-            }
+
         }
     }
     fun onSuccessFavourites(games: List<Game>) {
