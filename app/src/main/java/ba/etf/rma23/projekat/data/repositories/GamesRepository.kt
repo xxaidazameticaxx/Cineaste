@@ -1,5 +1,6 @@
 package ba.etf.rma23.projekat.data.repositories
 
+import androidx.compose.ui.text.substring
 import ba.etf.rma23.projekat.Game
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -59,7 +60,7 @@ object GamesRepository {
                     title = Response.title,
                     releaseDate = Response.releaseDates?.get(0)?.human,
                     platform = Response.platforms?.get(0)?.name,
-                    rating = Response.rating,
+                    rating = roundRating(Response.rating),
                     description = Response.summary,
                     coverImage = Response.cover?.coverUrl,
                     esrbRating = help(Response.esrbRating),
@@ -75,6 +76,9 @@ object GamesRepository {
         }
     }
 
-
+    private fun roundRating(rating: Double?): Double? {
+        val ratingString = rating?.toString()
+        return ratingString?.take(4)?.toDoubleOrNull()
+    }
 
 }

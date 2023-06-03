@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -35,12 +33,16 @@ class HomeFragment : Fragment() {
     private lateinit var detailsButton:BottomNavigationItemView
     private lateinit var searchButton: ImageButton //spirala 3
     private lateinit var searchText:EditText //spirala 3
+    private lateinit var favoriteCheckBox:CheckBox
+    private lateinit var sortButton:ImageView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.home_fragment, container, false)
 
         searchButton = view.findViewById(R.id.search_button) //spirala 3
         searchText=view.findViewById(R.id.search_query_edittext) //spirala 3
+        favoriteCheckBox=view.findViewById(R.id.favourites_checkBox)
+        sortButton=view.findViewById(R.id.sort_button)
 
         gameViewer = view.findViewById(R.id.game_list)
         gameViewer.layoutManager = LinearLayoutManager(
@@ -82,8 +84,15 @@ class HomeFragment : Fragment() {
         searchFavouriteGames()
 
         searchButton.setOnClickListener {
-            onClickSearch()
+            if (favoriteCheckBox.isChecked) {
+                searchContainingString(searchText.text.toString())
+            }
+            else {
+                search(searchText.text.toString())
+            }
         }
+
+
 
         return view
     }
@@ -104,11 +113,16 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun onClickSearch() {
-        val toast = Toast.makeText(context, "Search start", Toast.LENGTH_SHORT)
-        toast.show()
-        search(searchText.text.toString())
+    fun searchContainingString(name: String) {
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+
+        scope.launch{
+                val result = AccountGamesRepository.getGamesContainingString(name)
+                onSuccess(result)
+        }
     }
+
+
 
 
     fun search(query: String){
@@ -146,11 +160,6 @@ class HomeFragment : Fragment() {
     }
     fun onError() {
         val toast = Toast.makeText(context, "Search error", Toast.LENGTH_SHORT)
-        toast.show()
-    }
-
-    fun onError1() {
-        val toast = Toast.makeText(context, "Favourites error", Toast.LENGTH_SHORT)
         toast.show()
     }
 

@@ -1,5 +1,6 @@
 package ba.etf.rma23.projekat.data.repositories
 
+import android.widget.Toast
 import ba.etf.rma23.projekat.Game
 import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -8,7 +9,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 object AccountGamesRepository {
 
     private var games =ArrayList<Game>()
-    private lateinit var savedGame:Game
     private var aid: String = "5a13938a-1932-4ba9-b8cf-b23b22dca53a"
     private var age: Int = 21
 
@@ -52,6 +52,21 @@ object AccountGamesRepository {
         }
     }
 
+     suspend fun getGamesContainingString(query:String):List<Game> {
+         return withContext(Dispatchers.IO) {
+         val savedGames = getSavedGames()
+         val gamesContainingString = ArrayList<Game>()
+         for (game in savedGames) {
+             if (game.title.contains(query, ignoreCase = true)) {
+                 gamesContainingString.add(game)
+             }
+         }
+         return@withContext gamesContainingString
+     }
+
+    }
+
+
     suspend fun saveGame(game: Game) : Game{
         return withContext(Dispatchers.IO) {
 
@@ -59,7 +74,7 @@ object AccountGamesRepository {
             val gameResponse = response.body()
 
 
-                return@withContext GamesRepository.getGameById(gameResponse?.igdb_id!!)
+            return@withContext GamesRepository.getGameById(gameResponse?.igdb_id!!)
 
 
         }
@@ -75,5 +90,6 @@ object AccountGamesRepository {
 
         }
     }
+
 
 }
