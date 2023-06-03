@@ -1,5 +1,7 @@
 package ba.etf.rma23.projekat
 
+import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
+import ba.etf.rma23.projekat.data.repositories.GamesRepository
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,8 +13,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
-import ba.etf.rma23.projekat.data.repositories.GamesRepository
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
@@ -23,12 +23,7 @@ import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
-    companion object{
-        var isGameClicked = false
-    }
-
     private lateinit var gameViewer: RecyclerView
-    private lateinit var gameViewerAdapter: GameListAdapter
     private lateinit var bottomNavigationView:BottomNavigationView
     private lateinit var detailsButton:BottomNavigationItemView
     private lateinit var searchButton: ImageButton
@@ -37,6 +32,14 @@ class HomeFragment : Fragment() {
     private lateinit var removeSafeButton:Button
     private lateinit var sortButton:ImageView
     private lateinit var ageInputText:EditText
+    private lateinit var gameViewerAdapter: GameListAdapter
+
+    companion object{
+
+        var isGameClicked = false
+
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.home_fragment, container, false)
@@ -125,6 +128,19 @@ class HomeFragment : Fragment() {
             }
         }
 
+        sortButton.setOnClickListener{
+
+
+            val scope = CoroutineScope(Job() + Dispatchers.Main)
+            scope.launch{
+
+                val result = GamesRepository.sortGames()
+                gameViewerAdapter.updateGames(result)
+
+            }
+
+        }
+
         return view
     }
 
@@ -134,6 +150,7 @@ class HomeFragment : Fragment() {
 
             val result = AccountGamesRepository.removeNonSafeHelp()
             gameViewerAdapter.updateGames(result)
+            GamesRepository.currentGames= result as ArrayList<Game>
 
         }
     }
@@ -192,20 +209,21 @@ class HomeFragment : Fragment() {
 
                 val result = AccountGamesRepository.getSavedGames()
                 gameViewerAdapter.updateGames(result)
+                GamesRepository.currentGames= result as ArrayList<Game>
 
         }
     }
 
-    fun onSuccess(games: List<Game>) {
+    fun onSuccess(result: List<Game>) {
         val toast = Toast.makeText(context, "Searched games found", Toast.LENGTH_SHORT)
         toast.show()
-        gameViewerAdapter.updateGames(games)
+        gameViewerAdapter.updateGames(result)
+        GamesRepository.currentGames= result as ArrayList<Game>
     }
     fun onError() {
         val toast = Toast.makeText(context, "Search error", Toast.LENGTH_SHORT)
         toast.show()
     }
-
 
 
 }
