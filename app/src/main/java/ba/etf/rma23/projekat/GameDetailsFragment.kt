@@ -118,7 +118,7 @@ class GameDetailsFragment : Fragment() {
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
 
-                AccountGamesRepository.removeGame(game)
+                AccountGamesRepository.removeGame(game.id)
                 onSuccessRemoved()
 
 

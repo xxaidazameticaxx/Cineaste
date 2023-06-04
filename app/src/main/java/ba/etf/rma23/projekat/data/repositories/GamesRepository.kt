@@ -5,7 +5,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
-
+import org.hamcrest.CoreMatchers
+import org.hamcrest.MatcherAssert
 
 
 class GamesRepository {
@@ -38,6 +39,7 @@ class GamesRepository {
                     )
 
                 }
+                currentGames= games as ArrayList<Game>
                 return@withContext games!!
 
             }
@@ -111,6 +113,7 @@ class GamesRepository {
                     }
                     else gamesSearchResult.clear()
                 }
+                currentGames = gamesSearchResult
                 return@withContext gamesSearchResult
             }
 
@@ -139,7 +142,7 @@ class GamesRepository {
                         currentGame.title == savedGame.title
                     }
                     if (matchingGame != null) {
-                        matchingGames.add(matchingGame)
+                        matchingGames.add(savedGame)
                     }
                 }
 

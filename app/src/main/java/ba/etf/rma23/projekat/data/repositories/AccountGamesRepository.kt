@@ -75,17 +75,15 @@ class AccountGamesRepository {
                 val response = AccountApiConfig.retrofit.saveGame(getHash(),ResponseHelp(GetSwaggerGameResponse(game.id,game.title)))
                 val gameResponse = response.body()
 
-
                 return@withContext GamesRepository.getGameById(gameResponse?.igdb_id!!)
-
 
             }
         }
 
-        suspend fun removeGame(game: Game): Boolean {
+        suspend fun removeGame(id: Int): Boolean {
             return withContext(Dispatchers.IO) {
 
-                AccountApiConfig.retrofit.removeGame(getHash(),game.id)
+                AccountApiConfig.retrofit.removeGame(getHash(),id)
 
                 return@withContext true
 
@@ -105,19 +103,19 @@ class AccountGamesRepository {
                     val ageRating = game.esrbRating?.toInt()
                     if (ageRating != null) {
                         if(age == 17 && (ageRating== 12 || ageRating==5))
-                            removeGame(game)
+                            removeGame(game.id)
                         else if(age == 16 && (ageRating!= 12 && ageRating!=5 && ageRating!=11))
-                            removeGame(game)
+                            removeGame(game.id)
                         else if(age in 13..15 && (ageRating == 12 || ageRating==5 || ageRating==11 || ageRating==4))
-                            removeGame(game)
+                            removeGame(game.id)
                         else if(age == 12 && (ageRating== 12 || ageRating==5 || ageRating==11 || ageRating==4 || ageRating==10))
-                            removeGame(game)
+                            removeGame(game.id)
                         else if(age in 10.. 11 && (ageRating==12 || ageRating==5 || ageRating==11 || ageRating==4 || ageRating==10 || ageRating==3))
-                            removeGame(game)
+                            removeGame(game.id)
                         else if(age in 7.. 9 && (ageRating== 12 || ageRating==5 || ageRating==11 || ageRating==4 || ageRating==10 || ageRating==3 || ageRating==9))
-                            removeGame(game)
+                            removeGame(game.id)
                         else if(age in 3.. 6 && (ageRating== 12 || ageRating==5 || ageRating==11 || ageRating==4 || ageRating==10 || ageRating==3 || ageRating==9 || ageRating==2))
-                            removeGame(game)
+                            removeGame(game.id)
                     }
 
                 }
