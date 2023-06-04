@@ -160,7 +160,7 @@ class GameDetailsFragment : Fragment() {
         populateDetails()
     }
     fun onError() {
-        val toast = Toast.makeText(context, "Error while showing game details", Toast.LENGTH_SHORT)
+        val toast = Toast.makeText(context, "Landscape no game details", Toast.LENGTH_SHORT)
         toast.show()
     }
 
