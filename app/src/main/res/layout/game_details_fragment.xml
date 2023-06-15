@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="#F57C00"
     android:fillViewport="true">
 
     <LinearLayout
@@ -47,12 +48,12 @@
                 </androidx.cardview.widget.CardView>
 
                 <LinearLayout
+                    android:id="@+id/roditelj"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:background="#01579B"
                     android:gravity="center"
-                    android:id="@+id/roditelj"
                     android:orientation="horizontal">
 
                     <TextView
@@ -125,10 +126,10 @@
                         android:paddingStart="20dp"
                         android:paddingTop="8dp"
                         android:paddingEnd="24dp"
+                        android:text="About game"
                         android:textColor="#ffffffff"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:text="About game" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -222,6 +223,79 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/review_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#01579B"
+                    android:paddingStart="20dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="24dp"
+                    android:text="Rate the game"
+                    android:textColor="#ffffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                        <RatingBar
+                            android:id="@+id/ratingBar"
+                            android:layout_marginStart="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:numStars="5"
+                            android:stepSize="1"
+                        />
+
+                        <EditText
+                            android:id="@+id/textReview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:hint="Leave a comment"
+                            android:textColor="#ffffffff"
+                            android:textSize="16sp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/reviewButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:layout_marginStart="40dp"
+                            android:background="@drawable/rate_me_button"
+                            android:text="Rate me"
+                            android:textAlignment="center" />
+
+
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
