@@ -6,8 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
-import ba.etf.rma23.projekat.data.repositories.GetSwaggerGameResponse
+import ba.etf.rma23.projekat.data.repositories.*
+import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository.Companion.getReviewsForGame
+import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository.Companion.sendReview
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,10 +47,15 @@ class MainActivity : AppCompatActivity() {
             navView.setupWithNavController(navController)
             navController.navigate(R.id.homeItem) //every rotation refreshes the view as if we just opened the app
 
+
+        }
+
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch{
+            val result = sendReview(this@MainActivity, GameReview(50,null,"haus"))
         }
 
     }
-
 
 
 }

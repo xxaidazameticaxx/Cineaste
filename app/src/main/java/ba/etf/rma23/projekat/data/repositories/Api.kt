@@ -45,4 +45,20 @@ interface Api {
         @Path("aid") aid:String,
         @Path("gid") gid:Int
     )
+
+    @Headers("Content-Type: application/json")
+
+    @POST("/account/{aid}/game/{gid}/gamereview")
+    suspend fun sendReview(
+        @Path("aid") aid:String,
+        @Path("gid") gid:Int,
+        @Body body : RequestBody
+    ): Response<GameReviewResponse>
+
+    @Headers("Content-Type: application/json")
+
+    @GET("/game/{gid}/gamereviews")
+    suspend fun getReviewsForGame(
+        @Path("gid") gid:Int,
+    ): Response<List<GameReviewResponse>>
 }
