@@ -12,6 +12,10 @@ class GameReviewsRepository {
         suspend fun sendReview(context: Context, gameReview:GameReview):Boolean{
             return withContext(Dispatchers.IO) {
 
+                gameReview.online=false;
+                val db = AppDatabase.getInstance(context)
+                db.gameReviewDao().insertAll(gameReview)
+
                 var gameSaved= false;
                 val savedGames = AccountGamesRepository.getSavedGames()
 
@@ -25,10 +29,19 @@ class GameReviewsRepository {
                     AccountGamesRepository.saveGame(Game(gameReview.igdb_id,"game_title",null,null,null,null,null,null,null,null,null,null))
                 }
 
-                val body = "{\n" +
-                        "  \"review\": \""+ gameReview.review +"\",\n" +
-                        "  \"rating\":"+ gameReview.rating +"\n" +
-                        "}"
+                var body = "";
+                if(gameReview.review!=null) {
+                     body = "{\n" +
+                            "  \"review\": \"" + gameReview.review + "\",\n" +
+                            "  \"rating\":" + gameReview.rating + "\n" +
+                            "}"
+                }
+                else {
+                    body = "{\n" +
+                            "  \"rating\":" + gameReview.rating + "\n" +
+                            "}"
+                }
+
                 try {
                         AccountApiConfig.retrofit.sendReview(
                         AccountGamesRepository.getHash(),
@@ -38,6 +51,7 @@ class GameReviewsRepository {
                     )
                 }
                 catch (e: Exception){
+                    gameReview.online=false;
                     val db = AppDatabase.getInstance(context)
                     db.gameReviewDao().insertAll(gameReview)
                     return@withContext false
@@ -47,11 +61,33 @@ class GameReviewsRepository {
             }
         }
 
-        suspend fun getReviewsForGame(igdb_id:Int): List<GameReviewResponse> {
+        suspend fun getOfflineReviews(context:Context):List<GameReview>{
+            return withContext(Dispatchers.IO) {
+                val db = AppDatabase.getInstance(context)
+                return@withContext db.gameReviewDao().getAllNotSent();
+            }
+        }
+
+        suspend fun sendOfflineReviews(context:Context):Int{
+            return withContext(Dispatchers.IO) {
+                var reviewCount = 0
+                val db = AppDatabase.getInstance(context)
+                val reviewsNotSent = db.gameReviewDao().getAllNotSent();
+                for(review in reviewsNotSent){
+                    if(sendReview(context,GameReview(review.igdb_id,review.rating,review.review))){
+                        db.gameReviewDao().updateOnline(review.igdb_id)
+                        reviewCount++;
+                    }
+                }
+                return@withContext reviewCount
+            }
+        }
+
+
+        suspend fun getReviewsForGame(igdb_id:Int): List<GameReview> {
             return withContext(Dispatchers.IO) {
                 val response = AccountApiConfig.retrofit.getReviewsForGame(igdb_id)
                 val gameResponses = response.body()
-
                 return@withContext gameResponses!!
             }
         }

@@ -53,12 +53,12 @@ interface Api {
         @Path("aid") aid:String,
         @Path("gid") gid:Int,
         @Body body : RequestBody
-    ): Response<GameReviewResponse>
+    ): Response<GameReview>
 
     @Headers("Content-Type: application/json")
 
     @GET("/game/{gid}/gamereviews")
     suspend fun getReviewsForGame(
         @Path("gid") gid:Int,
-    ): Response<List<GameReviewResponse>>
+    ): Response<List<GameReview>>
 }

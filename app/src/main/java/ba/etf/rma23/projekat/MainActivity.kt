@@ -7,7 +7,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import ba.etf.rma23.projekat.data.repositories.*
+import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository.Companion.getOfflineReviews
 import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository.Companion.getReviewsForGame
+import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository.Companion.sendOfflineReviews
 import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository.Companion.sendReview
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
@@ -50,10 +52,6 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        val scope = CoroutineScope(Job() + Dispatchers.Main)
-        scope.launch{
-            val result = sendReview(this@MainActivity, GameReview(50,null,"haus"))
-        }
 
     }
 

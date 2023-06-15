@@ -12,11 +12,10 @@ data class GameReview (
     @ColumnInfo(name = "rating") @SerializedName("rating")   var rating: Int?,
     @ColumnInfo(name = "review") @SerializedName("review")  var review: String?,
     @ColumnInfo(name = "igdb_id") @SerializedName("GameId")  var igdb_id: Int,
-    @ColumnInfo(name = "online") @SerializedName("online")   var online: Boolean
+    @ColumnInfo(name = "online") @SerializedName("online")   var online: Boolean,
+    @SerializedName("student")   var student: String?
 
 ){
     constructor(igdb_id: Int,rating: Int?, review: String?) :
-            this(0, rating, review, igdb_id,true)
-
-
+            this(0, rating, review, igdb_id,true,null)
 }

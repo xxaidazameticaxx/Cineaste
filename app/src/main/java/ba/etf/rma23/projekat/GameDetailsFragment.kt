@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
-import ba.etf.rma23.projekat.data.repositories.GamesRepository
+import ba.etf.rma23.projekat.data.repositories.*
+import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository.Companion.getReviewsForGame
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -41,6 +41,8 @@ class GameDetailsFragment : Fragment() {
     private lateinit var saveButton:ImageButton
     private lateinit var deleteButton:ImageButton
     private lateinit var impressionViewerAdapter: UserImpressionAdapter
+    private var list = ArrayList<UserImpression>()
+    private lateinit var result :List<GameReview>
     private var gameId:Int = 0 //spirala 3
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -66,10 +68,6 @@ class GameDetailsFragment : Fragment() {
             false
         )
 
-        impressionViewerAdapter= UserImpressionAdapter(emptyList())
-        impressionViewer.adapter=impressionViewerAdapter
-
-
         val extras = arguments
         if (extras != null) {
             gameId= extras.getInt("game_id")
@@ -78,6 +76,27 @@ class GameDetailsFragment : Fragment() {
         } else {
             activity?.finish()
         }
+
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch{
+
+          result= getReviewsForGame(gameId)
+            if(result.isNotEmpty()){
+                for(x in result){
+                    if(x.review != null){
+                        list.add(UserReview(x.student!!,0,x.review!!))
+                    }
+                    if(x.rating!= null){
+                        list.add(UserRating(x.student!!,0,x.rating!!))
+                    }
+
+                }
+            }
+            impressionViewerAdapter= UserImpressionAdapter(list)
+            impressionViewer.adapter=impressionViewerAdapter
+
+        }
+
 
         if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
             val bottomNavigationView:BottomNavigationView=
@@ -184,7 +203,6 @@ class GameDetailsFragment : Fragment() {
         publisher.text=game.publisher
         genre.text=game.genre
         description.text=game.description
-        impressionViewerAdapter.updateImpressions(emptyList())
 
         val context: Context = cover.context
         Glide.with(context)
