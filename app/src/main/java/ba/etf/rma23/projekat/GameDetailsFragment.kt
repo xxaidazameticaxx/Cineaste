@@ -1,22 +1,20 @@
 package ba.etf.rma23.projekat
 
-import android.accounts.Account
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma23.projekat.data.repositories.*
 import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository.Companion.getReviewsForGame
+import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository.Companion.sendReview
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -40,6 +38,9 @@ class GameDetailsFragment : Fragment() {
     private lateinit var impressionViewer: RecyclerView
     private lateinit var saveButton:ImageButton
     private lateinit var deleteButton:ImageButton
+    private lateinit var reviewButton: AppCompatButton
+    private lateinit var reviewText: EditText
+    private lateinit var ratingBar:RatingBar
     private lateinit var impressionViewerAdapter: UserImpressionAdapter
     private var list = ArrayList<UserImpression>()
     private lateinit var result :List<GameReview>
@@ -56,9 +57,13 @@ class GameDetailsFragment : Fragment() {
         developer = view.findViewById(R.id.developer_textview)
         publisher = view.findViewById(R.id.publisher_textview)
         genre = view.findViewById(R.id.genre_textview)
+        ratingBar = view.findViewById(R.id.rating_bar)
+        reviewButton=view.findViewById(R.id.review_button)
+        reviewText=view.findViewById(R.id.text_review)
         description = view.findViewById(R.id.description_textview)
         saveButton = view.findViewById(R.id.save_button)
         deleteButton = view.findViewById(R.id.delete_button)
+
 
 
         impressionViewer = view.findViewById(R.id.review_list)
@@ -77,25 +82,8 @@ class GameDetailsFragment : Fragment() {
             activity?.finish()
         }
 
-        val scope = CoroutineScope(Job() + Dispatchers.Main)
-        scope.launch{
+        updateReviews()
 
-          result= getReviewsForGame(gameId)
-            if(result.isNotEmpty()){
-                for(x in result){
-                    if(x.review != null){
-                        list.add(UserReview(x.student!!,0,x.review!!))
-                    }
-                    if(x.rating!= null){
-                        list.add(UserRating(x.student!!,0,x.rating!!))
-                    }
-
-                }
-            }
-            impressionViewerAdapter= UserImpressionAdapter(list)
-            impressionViewer.adapter=impressionViewerAdapter
-
-        }
 
 
         if (resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
@@ -129,7 +117,58 @@ class GameDetailsFragment : Fragment() {
         deleteButton.setOnClickListener {
             onClickDeleteButton()
         }
+
+        reviewButton.setOnClickListener{
+
+            if (reviewText.text.isNotEmpty() && ratingBar.rating > 0.0) {
+                        sendUserReview(GameReview(gameId, ratingBar.rating.toInt(), reviewText.text.toString()))
+            }
+            else if (reviewText.text.isEmpty() && ratingBar.rating > 0.0) {
+                        sendUserReview(GameReview(gameId, ratingBar.rating.toInt(), null))
+            }
+            else if(reviewText.text.isNotEmpty()){
+                sendUserReview(GameReview(gameId, null, reviewText.text.toString()))
+            }
+            else{
+                val toast = Toast.makeText(context, "No input was found!", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+
+
+        }
         return view
+    }
+
+    private fun sendUserReview(gameReview: GameReview) {
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch {
+            sendReview(
+                requireContext(),
+                gameReview
+            )
+
+        }
+        val toast = Toast.makeText(context, "Your review is sent!", Toast.LENGTH_SHORT)
+        toast.show()
+    }
+
+    private fun updateReviews() {
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch {
+            result = getReviewsForGame(gameId)
+            if (result.isNotEmpty()) {
+                for (x in result) {
+                    if (x.review != null) {
+                        list.add(UserReview(x.student!!, 0, x.review!!))
+                    }
+                    if (x.rating != null) {
+                        list.add(UserRating(x.student!!, 0, x.rating!!))
+                    }
+                }
+            }
+            impressionViewerAdapter = UserImpressionAdapter(list)
+            impressionViewer.adapter = impressionViewerAdapter
+        }
     }
 
 
@@ -139,8 +178,6 @@ class GameDetailsFragment : Fragment() {
 
                 AccountGamesRepository.removeGame(game.id)
                 onSuccessRemoved()
-
-
         }
     }
 

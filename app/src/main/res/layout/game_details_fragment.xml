@@ -250,7 +250,7 @@
 
 
                         <RatingBar
-                            android:id="@+id/ratingBar"
+                            android:id="@+id/rating_bar"
                             android:layout_marginStart="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -260,7 +260,7 @@
                         />
 
                         <EditText
-                            android:id="@+id/textReview"
+                            android:id="@+id/text_review"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
@@ -279,7 +279,7 @@
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/reviewButton"
+                            android:id="@+id/review_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal|center_vertical"
@@ -287,9 +287,6 @@
                             android:background="@drawable/rate_me_button"
                             android:text="Rate me"
                             android:textAlignment="center" />
-
-
-
 
                     </LinearLayout>
 

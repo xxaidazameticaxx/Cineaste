@@ -18,11 +18,12 @@ abstract class AppDatabase : RoomDatabase() {
             }
             return INSTANCE!!
         }
-        private fun buildRoomDB(context: Context) =
-            Room.databaseBuilder(
-                context.applicationContext,
-                AppDatabase::class.java,
-                "reviews-db"
-            ).build()
+        private fun buildRoomDB(context: Context) = Room.databaseBuilder(
+            context.applicationContext,
+            AppDatabase::class.java,
+            "gamereview"
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }
