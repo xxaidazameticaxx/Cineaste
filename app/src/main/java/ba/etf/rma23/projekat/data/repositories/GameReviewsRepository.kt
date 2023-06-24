@@ -11,6 +11,12 @@ class GameReviewsRepository {
     companion object{
         suspend fun sendReview(context: Context, gameReview:GameReview):Boolean{
             return withContext(Dispatchers.IO) {
+                /*gameReview.online=false;
+                val db = AppDatabase.getInstance(context)
+                db.gameReviewDao().insertAll(gameReview)
+                return@withContext false
+
+                 */
                 try{
                 var gameSaved= false;
                 val savedGames = AccountGamesRepository.getSavedGames()
