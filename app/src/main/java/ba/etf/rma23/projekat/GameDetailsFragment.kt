@@ -121,13 +121,13 @@ class GameDetailsFragment : Fragment() {
         reviewButton.setOnClickListener{
 
             if (reviewText.text.isNotEmpty() && ratingBar.rating > 0.0) {
-                        sendUserReview(GameReview(gameId, ratingBar.rating.toInt(), reviewText.text.toString()))
+                        sendUserReview(GameReview( ratingBar.rating.toInt(), reviewText.text.toString(),gameId,true,"",""))
             }
             else if (reviewText.text.isEmpty() && ratingBar.rating > 0.0) {
-                        sendUserReview(GameReview(gameId, ratingBar.rating.toInt(), null))
+                        sendUserReview(GameReview(ratingBar.rating.toInt(), null,gameId,true, "",""))
             }
             else if(reviewText.text.isNotEmpty()){
-                sendUserReview(GameReview(gameId, null, reviewText.text.toString()))
+                sendUserReview(GameReview( null, reviewText.text.toString(),gameId,true,"",""))
             }
             else{
                 val toast = Toast.makeText(context, "No input was found!", Toast.LENGTH_SHORT)

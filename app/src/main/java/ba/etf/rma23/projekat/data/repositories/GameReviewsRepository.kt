@@ -15,6 +15,7 @@ class GameReviewsRepository {
                 gameReview.online=false;
                 val db = AppDatabase.getInstance(context)
                 db.gameReviewDao().insertAll(gameReview)
+                return@withContext false
 
                 var gameSaved= false;
                 val savedGames = AccountGamesRepository.getSavedGames()
@@ -74,7 +75,7 @@ class GameReviewsRepository {
                 val db = AppDatabase.getInstance(context)
                 val reviewsNotSent = db.gameReviewDao().getAllNotSent();
                 for(review in reviewsNotSent){
-                    if(sendReview(context,GameReview(review.igdb_id,review.rating,review.review))){
+                    if(sendReview(context,GameReview(review.rating,review.review,review.igdb_id,true,"",""))){
                         db.gameReviewDao().updateOnline(review.igdb_id)
                         reviewCount++;
                     }
