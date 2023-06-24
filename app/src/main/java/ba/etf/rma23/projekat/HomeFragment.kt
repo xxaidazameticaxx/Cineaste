@@ -206,7 +206,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
+/*
     fun searchFavouriteGames() {
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
@@ -215,6 +215,22 @@ class HomeFragment : Fragment() {
                 gameViewerAdapter.updateGames(result)
                 GamesRepository.currentGames= result as ArrayList<Game>
 
+        }
+    }
+
+ */
+
+    fun searchFavouriteGames() {
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch {
+            try {
+                val result = AccountGamesRepository.getSavedGames()
+                gameViewerAdapter.updateGames(result)
+                GamesRepository.currentGames = result as ArrayList<Game>
+            } catch (e: Exception) {
+                // Handle the exception here
+                gameViewerAdapter.updateGames(emptyList()) // Set the adapter to an empty array
+            }
         }
     }
 
