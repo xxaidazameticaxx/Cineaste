@@ -40,7 +40,7 @@ class DBTest {
     //pri testiranju zamjenite hash sa vašim i id igre umjesto 22 postavite na neki drugi broj
     // da ne bi došlo do konfuzije oko rezultata testova ako dva studenta istovremeno testiraju svoj kod
     private val HASH = "5a13938a-1932-4ba9-b8cf-b23b22dca53a"
-    private val idIGRE = 50975
+    private val idIGRE = 101
 
 
     private val countNotOnline =
@@ -126,10 +126,11 @@ class DBTest {
         var uia = InstrumentationRegistry.getInstrumentation().uiAutomation
         uia.executeShellCommand("svc wifi enable")
         uia.executeShellCommand("svc data enable")
-        Thread.sleep(2000)
+        Thread.sleep(3000) //ja sam postavila 3000 i prolazili su mi testovi
         var rez = GameReviewsRepository.sendOfflineReviews(context)
         assertEquals(rez, 1)
         executeCountAndCheck(countNotOnline, "broj_reviews", 0)
+
 
     }
 
